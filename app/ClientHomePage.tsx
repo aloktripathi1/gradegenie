@@ -1,240 +1,403 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import type React from "react"
+
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { Button } from "@/components/ui/button"
 import {
   Calculator,
-  TrendingUp,
-  BookOpen,
-  ArrowRight,
+  BarChart3,
   Sparkles,
+  Award,
+  BookOpen,
+  FileText,
+  Star,
   Target,
   Zap,
+  Layers,
+  PieChart,
+  Gauge,
+  Users,
   Github,
   Heart,
   GraduationCap,
+  ArrowRight,
+  Shield,
+  Clock,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
 import { SiteHeader } from "@/components/site-header"
+import { useState, useEffect } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ClientHomePage() {
-  const [mounted, setMounted] = useState(false)
+  const [activeTab, setActiveTab] = useState("accuracy")
+  const [scrolled, setScrolled] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
+  // Handle client-side mounting
   useEffect(() => {
-    setMounted(true)
+    setIsMounted(true)
   }, [])
 
-  if (!mounted) {
-    return null
+  // Track scroll position for effects
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 300)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Don't render until mounted
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white">
+        <SiteHeader />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="relative">
+            <div className="w-16 h-16 rounded-full border-4 border-emerald-500/30 border-t-emerald-500 animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 rounded-full bg-emerald-500/10 animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
-      <SiteHeader />
-
-      {/* Background Effects */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden">
+      {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-3/4 left-1/3 w-64 h-64 bg-blue-500/5 rounded-full blur-2xl animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-full blur-3xl animate-pulse opacity-60"></div>
+        <div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse opacity-60"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-indigo-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse opacity-40"
+          style={{ animationDelay: "4s" }}
+        ></div>
       </div>
 
+      <SiteHeader />
+
       {/* Hero Section */}
-      <section className="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-8"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium">
-              <Sparkles className="h-4 w-4" />
-              Exclusively for IITM BS Students
-            </div>
-
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-space-grotesk">
-              <span className="text-white">Grade</span>
-              <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                Genie
-              </span>
-            </h1>
-
-            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Your intelligent companion for grade calculation and prediction.
-              <br className="hidden md:block" />
-              Calculate current grades and predict future outcomes with precision.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-              <Link href="/calculator">
-                <Button className="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/25">
-                  <Calculator className="mr-2 h-5 w-5" />
-                  Start Calculating
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </Link>
-
-              <Link href="/predictor">
-                <Button
-                  variant="outline"
-                  className="px-8 py-4 border-2 border-gray-700 text-white hover:border-emerald-500/50 hover:bg-emerald-500/10 font-semibold rounded-xl transition-all duration-300 hover:scale-105 bg-transparent"
-                >
-                  <TrendingUp className="mr-2 h-5 w-5" />
-                  Predict Grades
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Everything you need to{" "}
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                succeed
-              </span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Powerful tools designed to help you track, calculate, and predict your academic performance
-            </p>
-          </motion.div>
+          <div className="text-center relative z-10">
+            {/* Floating Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-full mb-8 relative group liquid-glass"
+            >
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                <Sparkles className="h-4 w-4 text-emerald-400" />
+                <span className="text-white/90 font-medium">Exclusively for IITM BS Students</span>
+              </div>
+            </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Calculator className="h-8 w-8" />,
-                title: "Grade Calculator",
-                description:
-                  "Calculate your current grades with precision using our advanced algorithms tailored for different grading systems.",
-                href: "/calculator",
-                gradient: "from-emerald-500 to-teal-600",
-              },
-              {
-                icon: <TrendingUp className="h-8 w-8" />,
-                title: "Grade Predictor",
-                description:
-                  "Predict your future grades based on current performance and upcoming assignments with AI-powered insights.",
-                href: "/predictor",
-                gradient: "from-cyan-500 to-blue-600",
-              },
-              {
-                icon: <BookOpen className="h-8 w-8" />,
-                title: "Study Resources",
-                description:
-                  "Access comprehensive study materials, practice questions, and notes to boost your academic performance.",
-                href: "/oppe-pyqs",
-                gradient: "from-blue-500 to-purple-600",
-              },
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Link href={feature.href} className="group block h-full">
-                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/50 p-8 h-full transition-all duration-300 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-2">
-                    <div
-                      className={`inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br ${feature.gradient} mb-6 group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      {feature.icon}
+            {/* Main Heading */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+              className="mb-8"
+            >
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight mb-6">
+                <span className="block text-white/95 mb-2">Calculate Your</span>
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 animate-gradient bg-300% relative">
+                  Grades Instantly
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 opacity-20 blur-xl"></div>
+                </span>
+              </h1>
+            </motion.div>
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-xl sm:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed font-light"
+            >
+              The most accurate grade calculator & predictor for IITM BS courses with{" "}
+              <span className="text-emerald-400 font-medium">course-specific formulas</span> and{" "}
+              <span className="text-cyan-400 font-medium">detailed breakdowns</span>.
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20"
+            >
+              <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                <Link href="/calculator">
+                  <Button
+                    size="lg"
+                    className="group relative px-10 py-6 rounded-2xl font-semibold text-lg border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="relative flex items-center gap-3">
+                      <Calculator className="h-6 w-6" />
+                      <span>Start Calculating</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
-
-                    <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300">
-                      {feature.title}
-                    </h3>
-
-                    <p className="text-gray-400 leading-relaxed mb-6">{feature.description}</p>
-
-                    <div className="flex items-center text-emerald-400 font-medium group-hover:gap-2 transition-all duration-300">
-                      Learn more
-                      <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
-
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
+                  </Button>
                 </Link>
               </motion.div>
-            ))}
+
+              <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                <Link href="/predictor">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="group relative px-10 py-6 rounded-2xl font-semibold text-lg h-auto border-0 text-white overflow-hidden liquid-glass bg-transparent"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="relative flex items-center gap-3">
+                      <Target className="h-6 w-6" />
+                      <span>Try Predictor</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </div>
+                  </Button>
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            {/* Stats Cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.8 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+            >
+              {[
+                { icon: BookOpen, value: "40+", label: "Courses Supported", color: "from-emerald-500 to-teal-500" },
+                { icon: Users, value: "1000+", label: "Students Helped", color: "from-cyan-500 to-blue-500" },
+                { icon: Award, value: "100%", label: "Accurate Formulas", color: "from-blue-500 to-indigo-500" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.9 + index * 0.1 }}
+                  className="group relative p-8 rounded-3xl text-center transition-all duration-500 hover:scale-105 liquid-glass"
+                >
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative">
+                    <div
+                      className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
+                    >
+                      <stat.icon className="h-10 w-10 text-white" />
+                    </div>
+                    <h3 className="text-4xl font-bold text-white mb-3">{stat.value}</h3>
+                    <p className="text-white/70 font-medium text-lg">{stat.label}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+      {/* Features Section */}
+      <section className="relative py-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            {[
-              { icon: <Target className="h-8 w-8" />, number: "99.9%", label: "Accuracy Rate" },
-              { icon: <Zap className="h-8 w-8" />, number: "5K+", label: "Calculations Done" },
-              { icon: <BookOpen className="h-8 w-8" />, number: "60+", label: "Courses Supported" },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center p-8 rounded-2xl bg-gradient-to-br from-gray-900/30 to-gray-800/20 backdrop-blur-sm border border-gray-700/30"
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 mb-4">
-                  {stat.icon}
-                </div>
-                <div className="text-3xl font-bold text-white mb-2">{stat.number}</div>
-                <div className="text-gray-400">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+          {/* Section Header */}
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 liquid-glass"
+            >
+              <Star className="h-4 w-4 text-yellow-400" />
+              <span className="text-white/80 text-sm font-medium">Premium Features</span>
+            </motion.div>
 
-      {/* CTA Section */}
-      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Ready to take control of your{" "}
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                grades
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="text-5xl sm:text-6xl font-bold text-white mb-8"
+            >
+              Why Choose{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                GradeGenie
               </span>
               ?
-            </h2>
+            </motion.h2>
 
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Join thousands of students who are already using GradeGenie to improve their academic performance.
-            </p>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed"
+            >
+              Built specifically for IITM BS students with precision, elegance, and comprehensive features that make
+              grade calculation effortless.
+            </motion.p>
+          </div>
 
-            <Link href="/calculator">
-              <Button className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/25">
-                Get Started Now
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+          {/* Feature Tabs */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="max-w-6xl mx-auto"
+          >
+            <Tabs defaultValue="accuracy" value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid grid-cols-3 w-full mb-16 p-2 h-auto rounded-3xl border-0 liquid-glass">
+                {[
+                  { value: "accuracy", icon: Gauge, label: "Accuracy", gradient: "from-emerald-500 to-teal-500" },
+                  { value: "coverage", icon: Layers, label: "Coverage", gradient: "from-cyan-500 to-blue-500" },
+                  { value: "insights", icon: PieChart, label: "Insights", gradient: "from-blue-500 to-indigo-500" },
+                ].map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className={`relative w-full py-6 px-4 rounded-2xl transition-all duration-500 font-medium text-base data-[state=active]:text-white border-0 h-auto ${
+                      activeTab === tab.value
+                        ? `bg-gradient-to-r ${tab.gradient} shadow-lg`
+                        : "bg-transparent hover:bg-white/5"
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <tab.icon className="h-5 w-5" />
+                      <span>{tab.label}</span>
+                    </div>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              <TabsContent value="accuracy" className="mt-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                >
+                  <LiquidFeatureCard
+                    icon={<Calculator className="h-8 w-8 text-white" />}
+                    title="Course-Specific Formulas"
+                    description="Precise calculations using exact formulas for each IITM BS course, ensuring 100% accuracy in your grade predictions."
+                    gradient="from-emerald-500 to-teal-500"
+                  />
+                  <LiquidFeatureCard
+                    icon={<Sparkles className="h-8 w-8 text-white" />}
+                    title="Smart Bonus Calculation"
+                    description="Intelligent bonus mark application that automatically determines eligibility and caps scores appropriately."
+                    gradient="from-cyan-500 to-blue-500"
+                  />
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="coverage" className="mt-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                >
+                  <LiquidFeatureCard
+                    icon={<BookOpen className="h-8 w-8 text-white" />}
+                    title="All Degrees & Levels"
+                    description="Complete support for Data Science and Electronic Systems programs across Foundation, Diploma, and Degree levels."
+                    gradient="from-blue-500 to-indigo-500"
+                  />
+                  <LiquidFeatureCard
+                    icon={<FileText className="h-8 w-8 text-white" />}
+                    title="Comprehensive Course Database"
+                    description="Extensive database covering all courses with their unique grading patterns and assessment structures."
+                    gradient="from-indigo-500 to-purple-500"
+                  />
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="insights" className="mt-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                >
+                  <LiquidFeatureCard
+                    icon={<BarChart3 className="h-8 w-8 text-white" />}
+                    title="Visual Score Breakdown"
+                    description="Beautiful, interactive visualizations showing detailed breakdowns of your score components and contributions."
+                    gradient="from-purple-500 to-pink-500"
+                  />
+                  <LiquidFeatureCard
+                    icon={<Target className="h-8 w-8 text-white" />}
+                    title="Advanced Grade Predictor"
+                    description="Predict required final exam scores for target grades with intelligent recommendations and feasibility analysis."
+                    gradient="from-pink-500 to-rose-500"
+                  />
+                </motion.div>
+              </TabsContent>
+            </Tabs>
+          </motion.div>
+
+          {/* Additional Features Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 max-w-6xl mx-auto"
+          >
+            {[
+              {
+                icon: Zap,
+                title: "Lightning Fast",
+                description: "Instant calculations with optimized algorithms for immediate results",
+                color: "from-yellow-500 to-orange-500",
+              },
+              {
+                icon: Shield,
+                title: "Privacy First",
+                description: "Your data stays on your device - no tracking, no storage, complete privacy",
+                color: "from-emerald-500 to-cyan-500",
+              },
+              {
+                icon: Clock,
+                title: "Always Available",
+                description: "24/7 access with no downtime - calculate grades whenever you need",
+                color: "from-blue-500 to-indigo-500",
+              },
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="group relative p-8 rounded-3xl text-center transition-all duration-500 hover:scale-105 liquid-glass"
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative">
+                  <div
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
+                  >
+                    <feature.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-4">{feature.title}</h3>
+                  <p className="text-white/70 leading-relaxed">{feature.description}</p>
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>
@@ -299,5 +462,72 @@ export default function ClientHomePage() {
         </div>
       </footer>
     </div>
+  )
+}
+
+// Liquid Feature Card Component
+function LiquidFeatureCard({
+  icon,
+  title,
+  description,
+  gradient,
+}: {
+  icon: React.ReactNode
+  title: string
+  description: string
+  gradient: string
+}) {
+  // Helper function to get gradient colors safely
+  const getGradientColors = (gradientString: string) => {
+    const parts = gradientString.split(" ")
+    if (parts.length >= 3) {
+      const fromColor = parts[0]?.replace("from-", "") || "emerald-500"
+      const toColor = parts[2]?.replace("to-", "") || "teal-500"
+      return { fromColor, toColor }
+    }
+    return { fromColor: "emerald-500", toColor: "teal-500" }
+  }
+
+  const { fromColor, toColor } = getGradientColors(gradient)
+
+  return (
+    <motion.div
+      className="group relative p-8 rounded-3xl transition-all duration-700 hover:scale-105 liquid-glass"
+      whileHover={{ y: -8 }}
+    >
+      {/* Animated background gradient */}
+      <div
+        className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700"
+        style={{
+          background: `linear-gradient(135deg, var(--${fromColor}) 0%, var(--${toColor}) 100%)`,
+        }}
+      ></div>
+
+      {/* Liquid border effect */}
+      <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+        <div
+          className="absolute inset-0 rounded-3xl p-px"
+          style={{
+            background: `linear-gradient(135deg, var(--${fromColor}) 0%, var(--${toColor}) 100%)`,
+          }}
+        >
+          <div className="w-full h-full rounded-3xl bg-slate-950/95 backdrop-blur-sm"></div>
+        </div>
+      </div>
+
+      <div className="relative z-10">
+        <div
+          className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
+        >
+          {icon}
+        </div>
+        <h3 className="text-2xl font-semibold text-white mb-4 group-hover:text-white transition-colors duration-300">
+          {title}
+        </h3>
+        <p className="text-white/70 leading-relaxed text-lg group-hover:text-white/80 transition-colors duration-300">
+          {description}
+        </p>
+      </div>
+    </motion.div>
   )
 }
