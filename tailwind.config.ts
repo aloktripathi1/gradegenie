@@ -31,14 +31,15 @@ const config = {
           "Cantarell",
           "sans-serif",
         ],
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ["var(--font-poppins)"],
+        "space-grotesk": ["var(--font-space-grotesk)"],
       },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -107,7 +108,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 } satisfies Config
 
 export default config
