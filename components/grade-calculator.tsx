@@ -427,7 +427,7 @@ export default function GradeCalculator() {
               </SelectTrigger>
               <SelectContent className="bg-zinc-900 border-zinc-800 rounded-lg">
                 <SelectItem value="data-science" className="text-zinc-300 focus:bg-teal-600 focus:text-white">
-                  Data Science & Applications
+                  Data Science
                 </SelectItem>
                 <SelectItem value="electronic-systems" className="text-zinc-300 focus:bg-teal-600 focus:text-white">
                   Electronic Systems
