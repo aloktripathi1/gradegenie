@@ -99,7 +99,7 @@ export default function ClientHomePage() {
               <div className="relative flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
                 <Sparkles className="h-4 w-4 text-emerald-400" />
-                <span className="text-white/90 font-medium">Exclusively for IITM BS Students</span>
+                <span className="text-white/90 font-medium text-sm">Exclusively for IITM BS Students</span>
               </div>
             </motion.div>
 
@@ -110,7 +110,7 @@ export default function ClientHomePage() {
               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
               className="mb-8"
             >
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6">
                 <span className="block text-white/95 mb-2">Calculate Your</span>
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 animate-gradient bg-300% relative">
                   Grades Instantly
@@ -124,7 +124,7 @@ export default function ClientHomePage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl sm:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed font-light"
+              className="text-lg sm:text-xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed font-light"
             >
               The most accurate grade calculator & predictor for IITM BS courses with{" "}
               <span className="text-emerald-400 font-medium">course-specific formulas</span> and{" "}
@@ -142,13 +142,13 @@ export default function ClientHomePage() {
                 <Link href="/calculator">
                   <Button
                     size="lg"
-                    className="group relative px-10 py-6 rounded-2xl font-semibold text-lg border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
+                    className="group relative px-8 py-5 rounded-2xl font-semibold text-base border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="relative flex items-center gap-3">
-                      <Calculator className="h-6 w-6" />
+                      <Calculator className="h-5 w-5" />
                       <span>Start Calculating</span>
-                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </Button>
                 </Link>
@@ -159,13 +159,13 @@ export default function ClientHomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="group relative px-10 py-6 rounded-2xl font-semibold text-lg h-auto border-0 text-white overflow-hidden liquid-glass bg-transparent"
+                    className="group relative px-8 py-5 rounded-2xl font-semibold text-base h-auto border-0 text-white overflow-hidden liquid-glass bg-transparent"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="relative flex items-center gap-3">
-                      <Target className="h-6 w-6" />
+                      <Target className="h-5 w-5" />
                       <span>Try Predictor</span>
-                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </Button>
                 </Link>
@@ -194,12 +194,12 @@ export default function ClientHomePage() {
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative">
                     <div
-                      className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
+                      className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
                     >
-                      <stat.icon className="h-10 w-10 text-white" />
+                      <stat.icon className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="text-4xl font-bold text-white mb-3">{stat.value}</h3>
-                    <p className="text-white/70 font-medium text-lg">{stat.label}</p>
+                    <h3 className="text-3xl font-bold text-white mb-3">{stat.value}</h3>
+                    <p className="text-white/70 font-medium text-base">{stat.label}</p>
                   </div>
                 </motion.div>
               ))}
@@ -221,7 +221,7 @@ export default function ClientHomePage() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 liquid-glass"
             >
               <Star className="h-4 w-4 text-yellow-400" />
-              <span className="text-white/80 text-sm font-medium">Premium Features</span>
+              <span className="text-white/80 text-xs font-medium">Premium Features</span>
             </motion.div>
 
             <motion.h2
@@ -229,7 +229,7 @@ export default function ClientHomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-5xl sm:text-6xl font-bold text-white mb-8"
+              className="text-4xl sm:text-5xl font-bold text-white mb-8"
             >
               Why Choose{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
@@ -243,7 +243,7 @@ export default function ClientHomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed"
+              className="text-lg text-white/70 max-w-3xl mx-auto leading-relaxed"
             >
               Built specifically for IITM BS students with precision, elegance, and comprehensive features that make
               grade calculation effortless.
@@ -268,14 +268,14 @@ export default function ClientHomePage() {
                   <TabsTrigger
                     key={tab.value}
                     value={tab.value}
-                    className={`relative w-full py-6 px-4 rounded-2xl transition-all duration-500 font-medium text-base data-[state=active]:text-white border-0 h-auto ${
+                    className={`relative w-full py-5 px-4 rounded-2xl transition-all duration-500 font-medium text-sm data-[state=active]:text-white border-0 h-auto ${
                       activeTab === tab.value
                         ? `bg-gradient-to-r ${tab.gradient} shadow-lg`
                         : "bg-transparent hover:bg-white/5"
                     }`}
                   >
-                    <div className="flex items-center justify-center gap-3">
-                      <tab.icon className="h-5 w-5" />
+                    <div className="flex items-center justify-center gap-2">
+                      <tab.icon className="h-4 w-4" />
                       <span>{tab.label}</span>
                     </div>
                   </TabsTrigger>
@@ -290,13 +290,13 @@ export default function ClientHomePage() {
                   className="grid grid-cols-1 md:grid-cols-2 gap-8"
                 >
                   <LiquidFeatureCard
-                    icon={<Calculator className="h-8 w-8 text-white" />}
+                    icon={<Calculator className="h-7 w-7 text-white" />}
                     title="Course-Specific Formulas"
                     description="Precise calculations using exact formulas for each IITM BS course, ensuring 100% accuracy in your grade predictions."
                     gradient="from-emerald-500 to-teal-500"
                   />
                   <LiquidFeatureCard
-                    icon={<Sparkles className="h-8 w-8 text-white" />}
+                    icon={<Sparkles className="h-7 w-7 text-white" />}
                     title="Smart Bonus Calculation"
                     description="Intelligent bonus mark application that automatically determines eligibility and caps scores appropriately."
                     gradient="from-cyan-500 to-blue-500"
@@ -312,13 +312,13 @@ export default function ClientHomePage() {
                   className="grid grid-cols-1 md:grid-cols-2 gap-8"
                 >
                   <LiquidFeatureCard
-                    icon={<BookOpen className="h-8 w-8 text-white" />}
+                    icon={<BookOpen className="h-7 w-7 text-white" />}
                     title="All Degrees & Levels"
                     description="Complete support for Data Science and Electronic Systems programs across Foundation, Diploma, and Degree levels."
                     gradient="from-blue-500 to-indigo-500"
                   />
                   <LiquidFeatureCard
-                    icon={<FileText className="h-8 w-8 text-white" />}
+                    icon={<FileText className="h-7 w-7 text-white" />}
                     title="Comprehensive Course Database"
                     description="Extensive database covering all courses with their unique grading patterns and assessment structures."
                     gradient="from-indigo-500 to-purple-500"
@@ -334,13 +334,13 @@ export default function ClientHomePage() {
                   className="grid grid-cols-1 md:grid-cols-2 gap-8"
                 >
                   <LiquidFeatureCard
-                    icon={<BarChart3 className="h-8 w-8 text-white" />}
+                    icon={<BarChart3 className="h-7 w-7 text-white" />}
                     title="Visual Score Breakdown"
                     description="Beautiful, interactive visualizations showing detailed breakdowns of your score components and contributions."
                     gradient="from-purple-500 to-pink-500"
                   />
                   <LiquidFeatureCard
-                    icon={<Target className="h-8 w-8 text-white" />}
+                    icon={<Target className="h-7 w-7 text-white" />}
                     title="Advanced Grade Predictor"
                     description="Predict required final exam scores for target grades with intelligent recommendations and feasibility analysis."
                     gradient="from-pink-500 to-rose-500"
@@ -389,12 +389,12 @@ export default function ClientHomePage() {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative">
                   <div
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
+                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
                   >
-                    <feature.icon className="h-8 w-8 text-white" />
+                    <feature.icon className="h-7 w-7 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-4">{feature.title}</h3>
-                  <p className="text-white/70 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg font-semibold text-white mb-4">{feature.title}</h3>
+                  <p className="text-white/70 leading-relaxed text-sm">{feature.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -413,10 +413,10 @@ export default function ClientHomePage() {
               transition={{ duration: 0.8 }}
               className="flex items-center gap-4 mb-8 md:mb-0"
             >
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg">
-                <GraduationCap className="h-7 w-7 text-white" />
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg">
+                <GraduationCap className="h-6 w-6 text-white" />
               </div>
-              <span className="text-3xl font-bold text-white">GradeGenie</span>
+              <span className="text-2xl font-bold text-white">GradeGenie</span>
             </motion.div>
 
             <motion.nav
@@ -424,7 +424,7 @@ export default function ClientHomePage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="flex gap-10"
+              className="flex gap-8"
             >
               {[
                 { href: "/calculator", label: "Calculator" },
@@ -434,7 +434,7 @@ export default function ClientHomePage() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-white/70 hover:text-white transition-all duration-300 font-medium text-lg hover:scale-105"
+                  className="text-white/70 hover:text-white transition-all duration-300 font-medium text-base hover:scale-105"
                 >
                   {item.label}
                 </Link>
@@ -443,18 +443,18 @@ export default function ClientHomePage() {
           </div>
 
           <div className="text-center pt-8 border-t border-white/10">
-            <p className="text-white/60 mb-3 text-lg">
+            <p className="text-white/60 mb-3 text-base">
               © {new Date().getFullYear()} GradeGenie. Not affiliated with IITM.
             </p>
-            <p className="text-white/70 flex items-center justify-center gap-3 text-lg">
-              Made with <Heart className="h-5 w-5 text-red-500 animate-pulse" /> by{" "}
+            <p className="text-white/70 flex items-center justify-center gap-3 text-base">
+              Made with <Heart className="h-4 w-4 text-red-500 animate-pulse" /> by{" "}
               <Link
                 href="https://github.com/aloktripathi1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-emerald-400 hover:text-emerald-300 transition-all duration-300 font-medium flex items-center gap-2 hover:scale-105"
               >
-                <Github className="h-5 w-5" />
+                <Github className="h-4 w-4" />
                 Alok Tripathi
               </Link>
             </p>
@@ -517,14 +517,14 @@ function LiquidFeatureCard({
 
       <div className="relative z-10">
         <div
-          className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
+          className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
         >
           {icon}
         </div>
-        <h3 className="text-2xl font-semibold text-white mb-4 group-hover:text-white transition-colors duration-300">
+        <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-white transition-colors duration-300">
           {title}
         </h3>
-        <p className="text-white/70 leading-relaxed text-lg group-hover:text-white/80 transition-colors duration-300">
+        <p className="text-white/70 leading-relaxed text-base group-hover:text-white/80 transition-colors duration-300">
           {description}
         </p>
       </div>
