@@ -82,7 +82,6 @@ export const courseData: Course[] = [
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
       { id: "B", label: "Bonus", description: "Bonus Marks (out of 6)", max: 6 } 
     ],
-}
   },
   {
     id: "eng2",
