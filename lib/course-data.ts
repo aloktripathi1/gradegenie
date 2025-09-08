@@ -80,7 +80,7 @@ export const courseData: Course[] = [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "B", label: "Bonus", description: "Bonus Marks (out of 6)", max: 6 } 
+      { id: "Extra", label: "Extra Activity", description: "Extra Activity Marks (out of 6)", max: 6 } 
     ],
 }
   },
