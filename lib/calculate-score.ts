@@ -4,7 +4,6 @@ export function calculateScore(courseId: string, values: Record<string, number>)
     case "mds1":
     case "eng1":
     case "ct":
-    case "mds2":
     case "eng2":
       return (
         0.1 * values.GAA +
@@ -13,6 +12,18 @@ export function calculateScore(courseId: string, values: Record<string, number>)
           0.4 * values.F + 0.2 * values.Qz1 + 0.3 * values.Qz2,
         )
       )
+
+    case "mds2": {
+      // Mathematics 2 uses: T = min( base * (1 + 0.01 * B), 100)
+      const base =
+        0.1 * (values.GAA || 0) +
+        Math.max(
+          0.6 * (values.F || 0) + 0.2 * Math.max(values.Qz1 || 0, values.Qz2 || 0),
+          0.4 * (values.F || 0) + 0.2 * (values.Qz1 || 0) + 0.3 * (values.Qz2 || 0),
+        )
+      const bonusPercent = 0.01 * (values.B || 0)
+      return Math.min(base * (1 + bonusPercent), 100)
+    }
 
     case "stats1":
     case "stats2":

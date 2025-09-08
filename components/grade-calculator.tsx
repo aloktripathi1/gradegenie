@@ -117,6 +117,16 @@ export default function GradeCalculator() {
 
     const numValue = Number(value)
 
+    // Sanitize non-numeric input
+    if (Number.isNaN(numValue)) {
+      setError(null)
+      setFormValues({
+        ...formValues,
+        [fieldId]: null,
+      })
+      return
+    }
+
     // Validate input
     if (numValue < 0) {
       setError(`${fieldId} cannot be negative`)
@@ -145,6 +155,12 @@ export default function GradeCalculator() {
     }
 
     const numValue = Number(value)
+
+    // Sanitize non-numeric input
+    if (Number.isNaN(numValue)) {
+      setBonusMarks(null)
+      return
+    }
 
     // Validate bonus input
     if (numValue < 0) {
@@ -192,7 +208,9 @@ export default function GradeCalculator() {
       // Calculate final score with bonus if applicable
       let finalScore = initialScore
       const bonusValue = bonusMarks ?? 0
-      if (bonusApplied && bonusValue > 0) {
+      // Do not add global bonus for courses that already include bonus in the formula (e.g., mds2)
+      const courseHasInternalBonus = course.formFields.some((f) => f.id === "B" || f.id.toLowerCase().includes("extra"))
+      if (!courseHasInternalBonus && bonusApplied && bonusValue > 0) {
         finalScore = Math.min(100, initialScore + bonusValue)
       }
 
@@ -205,8 +223,8 @@ export default function GradeCalculator() {
         calculationValues,
         initialScore,
         finalScore,
-        bonusApplied,
-        bonusValue,
+        !courseHasInternalBonus && bonusApplied,
+        !courseHasInternalBonus ? bonusValue : 0,
       )
 
       // Generate component scores for visual breakdown
@@ -214,7 +232,7 @@ export default function GradeCalculator() {
         course,
         calculationValues,
         initialScore,
-        bonusApplied ? bonusValue : 0,
+        !courseHasInternalBonus && bonusApplied ? bonusValue : 0,
       )
 
       setResult({
@@ -222,7 +240,7 @@ export default function GradeCalculator() {
         finalScore: finalScore,
         grade: grade,
         formula: course.formula,
-        bonusApplied: bonusApplied && bonusValue > 0,
+        bonusApplied: !courseHasInternalBonus && bonusApplied && bonusValue > 0,
         formulaBreakdown: formulaBreakdown,
         componentScores: componentScores,
       })
