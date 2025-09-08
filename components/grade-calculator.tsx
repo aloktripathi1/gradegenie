@@ -231,6 +231,12 @@ export default function GradeCalculator() {
     }
   }
 
+  // Determine if we should show the generic Bonus input (hide if course already has its own bonus/extra field)
+  const currentCourse = courseData.find((c) => c.id === selectedCourse)
+  const showBonusInput = Boolean(
+    selectedCourse && !(currentCourse?.formFields?.some((f) => f.id === "B" || f.id.toLowerCase().includes("extra")))
+  )
+
   const generateFormulaBreakdown = (
     courseId: string,
     values: Record<string, number>,
@@ -588,47 +594,49 @@ export default function GradeCalculator() {
                 ))}
 
                 {/* Bonus Marks */}
-                <motion.div
-                  className="space-y-2 group"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
-                >
-                  <div className="flex items-center gap-1.5">
-                    <div className="p-1.5 rounded-md bg-zinc-900/80 border border-zinc-800 group-hover:border-green-800 transition-colors">
-                      <Sparkles className="h-4 w-4 text-green-400" />
+                {showBonusInput && (
+                  <motion.div
+                    className="space-y-2 group"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <div className="p-1.5 rounded-md bg-zinc-900/80 border border-zinc-800 group-hover:border-green-800 transition-colors">
+                        <Sparkles className="h-4 w-4 text-green-400" />
+                      </div>
+                      <Label
+                        htmlFor="bonus"
+                        className="text-zinc-400 group-hover:text-green-400 transition-colors flex items-center gap-2 text-sm font-medium"
+                      >
+                        Bonus Marks
+                      </Label>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <HelpCircle className="h-3.5 w-3.5 text-zinc-600 cursor-help group-hover:text-green-600 transition-colors" />
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-zinc-900 border-zinc-800 text-zinc-300 rounded-lg">
+                            <p>Bonus marks (out of 5) are applied only if your total score is ≥ 40</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
-                    <Label
-                      htmlFor="bonus"
-                      className="text-zinc-400 group-hover:text-green-400 transition-colors flex items-center gap-2 text-sm font-medium"
-                    >
-                      Bonus Marks
-                    </Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <HelpCircle className="h-3.5 w-3.5 text-zinc-600 cursor-help group-hover:text-green-600 transition-colors" />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-zinc-900 border-zinc-800 text-zinc-300 rounded-lg">
-                          <p>Bonus marks (out of 5) are applied only if your total score is ≥ 40</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  <div className="relative">
-                    <Input
-                      id="bonus"
-                      type="number"
-                      min="0"
-                      max="5"
-                      placeholder="0-5"
-                      value={bonusMarks === null ? "" : bonusMarks.toString()}
-                      onChange={(e) => handleBonusChange(e.target.value)}
-                      className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-green-500 focus:border-green-500 transition-all group-hover:border-green-800 hover:border-zinc-700 h-10 rounded-lg pr-8"
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs">/5</div>
-                  </div>
-                </motion.div>
+                    <div className="relative">
+                      <Input
+                        id="bonus"
+                        type="number"
+                        min="0"
+                        max="5"
+                        placeholder="0-5"
+                        value={bonusMarks === null ? "" : bonusMarks.toString()}
+                        onChange={(e) => handleBonusChange(e.target.value)}
+                        className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-green-500 focus:border-green-500 transition-all group-hover:border-green-800 hover:border-zinc-700 h-10 rounded-lg pr-8"
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs">/5</div>
+                    </div>
+                  </motion.div>
+                )}
               </div>
 
               {/* Action Buttons */}
