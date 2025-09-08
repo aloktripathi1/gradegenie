@@ -74,7 +74,7 @@ export const courseData: Course[] = [
     name: "Mathematics 2",
     degree: "data-science",
     level: "foundation",
-    formula: "T = min( (0.1 * GAA + max(0.6 * F + 0.2 * max(Qz1, Qz2), 0.4 * F + 0.2 * Qz1 + 0.3 * Qz2)) * (1 + 0.01 * B), 100)",
+    formula: "T = min( (0.1 * GAA + max(0.6 * F + 0.2 * max(Qz1, Qz2), 0.4 * F + 0.2 * Qz1 + 0.3 * Qz2)) * (1 + 0.01 * Extra), 100)",
     formFields: [
       { id: "GAA", label: "GAA", description: "Graded Assignment Average", max: 100 },
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
