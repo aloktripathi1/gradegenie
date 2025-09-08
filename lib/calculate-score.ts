@@ -63,7 +63,10 @@ export function calculateScore(courseId: string, values: Record<string, number>)
       return 0.7 * Math.max(values.Qz1, values.Qz2) + 0.3 * Math.min(values.Qz1, values.Qz2)
 
     case "tds":
-      return 0.1 * values.GAA + 0.2 * values.ROE1 + 0.2 * values.P1 + 0.2 * values.P2 + 0.3 * values.F
+      return 0.2 * values.GAA + 0.2 * values.ROE1 + 0.2 * values.P1 + 0.2 * values.P2 + 0.2 * values.F
+
+    case "dl-genAI":
+      return 0.2 * values.GAA + 0.15 * values.Qz1 + 0.15 * values.Qz2 + 0.2 * values.F + 0.15 * values.NPPE1 + 0.15 * values.NPPE2 
 
     case "pds":
     case "pdsa":

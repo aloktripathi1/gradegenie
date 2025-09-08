@@ -52,7 +52,7 @@ export const courseData: Course[] = [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "Extra", label: "Extra Activity", description: "Extra Activity Marks", max: 10 },
+      { id: "Extra", label: "Extra Activity", description: "Extra Activity Marks", max: 5 },
     ],
   },
   {
@@ -66,7 +66,7 @@ export const courseData: Course[] = [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "Extra", label: "Extra Activity", description: "Extra Activity Marks", max: 10 },
+      { id: "Extra", label: "Extra Activity", description: "Extra Activity Marks", max: 5 },
     ],
   },
   {
@@ -74,13 +74,15 @@ export const courseData: Course[] = [
     name: "Mathematics 2",
     degree: "data-science",
     level: "foundation",
-    formula: "T = 0.1 * GAA + max(0.6 * F + 0.2 * max(Qz1, Qz2), 0.4 * F + 0.2 * Qz1 + 0.3 * Qz2)",
+    formula: "T = min( (0.1 * GAA + max(0.6 * F + 0.2 * max(Qz1, Qz2), 0.4 * F + 0.2 * Qz1 + 0.3 * Qz2)) * (1 + 0.01 * B), 100)",
     formFields: [
       { id: "GAA", label: "GAA", description: "Graded Assignment Average", max: 100 },
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
+      { id: "B", label: "Bonus", description: "Bonus Marks (out of 6)", max: 6 } 
     ],
+}
   },
   {
     id: "eng2",
@@ -181,13 +183,28 @@ export const courseData: Course[] = [
     name: "Tools in Data Science",
     degree: "data-science",
     level: "diploma",
-    formula: "T = 0.15 * GAA + 0.2 * ROE1 + 0.2 * P1 + 0.2 * P2 + 0.25 * F",
+    formula: "T = 0.20 * GAA + 0.2 * ROE1 + 0.2 * P1 + 0.2 * P2 + 0.20 * F",
     formFields: [
       { id: "GAA", label: "GAA", description: "Graded Assignment Average", max: 100 },
       { id: "ROE1", label: "ROE 1", description: "Review of Evaluation 1", max: 100 },
       { id: "P1", label: "Project 1", description: "First Project Score", max: 100 },
       { id: "P2", label: "Project 2", description: "Second Project Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
+    ],
+  },
+  {
+    id: "dl-genAI",
+    name: "Intro to DL and GenAI",
+    degree: "data-science",
+    level: "diploma",
+    formula: "T = 0.20 * GAA + 0.15 * Qz1 + 0.15 * Qz2 + 0.2 * F + 0.15 * NPPE1 + 0.15 * NPPE2",
+    formFields: [
+    { id: "GAA", label: "GAA", description: "Graded Assignment Average", max: 100 },
+    { id: "Qz1", label: "Quiz 1", description: "Quiz1", max: 100 },
+    { id: "Qz2", label: "Quiz 2", description: "Quiz2", max: 100 },
+    { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
+    { id: "NPPE1", label: "NPPE 1", description: "Non - Proctored Programming Exam 1", max: 100 },
+    { id: "NPPE2", label: "NPPE 2", description: "Non - Proctored Programming Exam 2", max: 100 },
     ],
   },
   {
