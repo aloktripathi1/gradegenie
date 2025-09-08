@@ -110,10 +110,7 @@ export default function ClientHomePage() {
               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
               className="mb-8"
             >
-              <h1
-                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 italic"
-                style={{ fontFamily: '"Segoe UI", SegoeUI, "Segoe UI Emoji", "Segoe UI Symbol", system-ui, -apple-system, "Helvetica Neue", Arial, "Noto Sans", sans-serif', fontStyle: 'italic' }}
-              >
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6">
                 <span className="block text-white/95 mb-2">Calculate Your</span>
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 animate-gradient bg-300% relative">
                   Grades Instantly
