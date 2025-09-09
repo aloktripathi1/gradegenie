@@ -46,7 +46,7 @@ export function SiteHeader() {
                 </div>
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 opacity-20 blur-md"></div>
               </div>
-              <span className="text-xl font-semibold text-white tracking-tight">GradeGenie</span>
+              <span className="text-xl font-semibold text-primary tracking-tight">GradeGenie</span>
             </Link>
           </div>
 
@@ -61,7 +61,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-4 py-2 text-sm font-medium text-white/80 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/10 backdrop-blur-sm"
+                className="px-4 py-2 text-sm font-medium text-primary hover:text-white transition-all duration-200 rounded-lg hover:bg-primary/20 backdrop-blur-sm"
               >
                 {item.label}
               </Link>

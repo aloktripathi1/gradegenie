@@ -99,7 +99,7 @@ export default function ClientHomePage() {
               <div className="relative flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
                 <Sparkles className="h-4 w-4 text-emerald-400" />
-                <span className="text-white/90 font-medium text-sm">Exclusively for IITM BS Students</span>
+                <span className="text-primary font-medium text-sm">Exclusively for IITM BS Students</span>
               </div>
             </motion.div>
 
@@ -419,7 +419,7 @@ export default function ClientHomePage() {
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg">
                 <GraduationCap className="h-6 w-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-white">GradeGenie</span>
+              <span className="text-2xl font-bold text-primary">GradeGenie</span>
             </motion.div>
 
             <motion.nav

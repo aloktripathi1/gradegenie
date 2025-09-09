@@ -21,10 +21,10 @@ const config = {
     extend: {
       fontFamily: {
         sans: [
+          "Segoe UI",
           "Poppins",
           "-apple-system",
           "BlinkMacSystemFont",
-          "Segoe UI",
           "Roboto",
           "Oxygen",
           "Ubuntu",

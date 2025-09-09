@@ -11,9 +11,9 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Poppins font for all elements */
+  /* Base font: Segoe UI with Poppins fallback */
   body {
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    font-family: "Segoe UI", SegoeUI, -apple-system, BlinkMacSystemFont, "Poppins", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
       sans-serif;
     font-weight: 400;
     letter-spacing: 0.01em;
@@ -29,9 +29,9 @@
     }
   }
 
-  /* Force Poppins font everywhere */
+  /* Base font everywhere */
   * {
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    font-family: "Segoe UI", SegoeUI, -apple-system, BlinkMacSystemFont, "Poppins", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
       sans-serif !important;
   }
 
@@ -42,7 +42,7 @@
   h4,
   h5,
   h6 {
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    font-family: "Segoe UI", SegoeUI, -apple-system, BlinkMacSystemFont, "Poppins", sans-serif !important;
     font-weight: 600;
     letter-spacing: -0.02em;
   }
@@ -77,8 +77,9 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
+  /* Primary brand color: maroon (#800000) */
+  --primary: 0 100% 25.1%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 210 40% 96.1%;
   --secondary-foreground: 222.2 84% 4.9%;
   --muted: 210 40% 96.1%;
@@ -100,8 +101,9 @@
   --card-foreground: 210 40% 98%;
   --popover: 222.2 84% 4.9%;
   --popover-foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
+  /* Primary brand color: maroon (#800000) in dark mode */
+  --primary: 0 100% 25.1%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 217.2 32.6% 17.5%;
   --secondary-foreground: 210 40% 98%;
   --muted: 217.2 32.6% 17.5%;
