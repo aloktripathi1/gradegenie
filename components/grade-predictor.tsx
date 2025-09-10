@@ -24,6 +24,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { courseData } from "@/lib/course-data"
 import { motion, AnimatePresence } from "framer-motion"
+import { calculateScore } from "@/lib/calculate-score"
 import type { FormField } from "@/lib/types"
 
 export default function GradePredictor() {
@@ -297,41 +298,43 @@ export default function GradePredictor() {
     maxFinalScore: number,
     bonusMarks: number,
   ): number => {
-    // This is a simplified approach - in a real implementation, you would need to analyze the formula
-    // more carefully to determine the exact final exam score needed
-
-    // For this example, we'll use a simple approach based on the course ID
-
-    // Get the course formula
     const course = courseData.find((c) => c.id === courseId)
-    if (!course) return 100 // Default to max score if course not found
+    if (!course) return maxFinalScore
 
-    // Different calculation based on course pattern
-    if (courseId.includes("python") || courseId === "python-es") {
-      // Python courses typically have final exam worth 40%
-      const currentScore =
-        0.1 * (values["GAA1"] || 0) +
-        0.1 * (values["GAA2"] || 0) +
-        0.1 * (values["Qz1"] || 0) +
-        0.15 * (values["PE1"] || 0) +
-        0.15 * (values["PE2"] || 0)
+    // Determine if course already accounts for bonus internally (e.g., Mathematics 2 with B/Extra)
+    const courseHasInternalBonus = course.formFields.some((f) => f.id === "B" || f.id.toLowerCase().includes("extra"))
 
-      // Target score minus current components, divided by final exam weight
-      const requiredContribution = targetScore - currentScore - (bonusMarks > 0 ? Math.min(bonusMarks, 5) : 0)
-      return requiredContribution / 0.4 // Final exam is 40%
-    } else if (courseId.includes("stats")) {
-      // Stats courses
-      const currentScore = 0.1 * (values["GAA"] || 0) + 0.2 * Math.max(values["Qz1"] || 0, values["Qz2"] || 0)
+    // Function to compute final score for a candidate final exam score using the real formula
+    const computeFinalScore = (finalExamScore: number): number => {
+      const calcValues: Record<string, number> = { ...values, F: finalExamScore }
+      const initialScore = calculateScore(courseId, calcValues)
 
-      const requiredContribution = targetScore - currentScore - (bonusMarks > 0 ? Math.min(bonusMarks, 5) : 0)
-      return requiredContribution / 0.6 // Final exam is 60%
-    } else {
-      // Standard courses
-      const currentScore = 0.1 * (values["GAA"] || 0) + 0.2 * (values["Qz1"] || 0) + 0.3 * (values["Qz2"] || 0)
+      if (courseHasInternalBonus) {
+        return Math.min(100, initialScore)
+      }
 
-      const requiredContribution = targetScore - currentScore - (bonusMarks > 0 ? Math.min(bonusMarks, 5) : 0)
-      return requiredContribution / 0.4 // Final exam is 40%
+      const bonus = Math.min(bonusMarks || 0, 5)
+      const bonusApplied = initialScore >= 40 && bonus > 0
+      return Math.min(100, initialScore + (bonusApplied ? bonus : 0))
     }
+
+    // Binary search for minimal F achieving targetScore
+    let low = 0
+    let high = maxFinalScore
+    let answer = maxFinalScore
+
+    for (let i = 0; i < 25; i++) {
+      const mid = (low + high) / 2
+      const finalScore = computeFinalScore(mid)
+      if (finalScore >= targetScore) {
+        answer = mid
+        high = mid - 0.0001
+      } else {
+        low = mid + 0.0001
+      }
+    }
+
+    return Math.max(0, Math.min(answer, maxFinalScore))
   }
 
   const resetPredictor = () => {
