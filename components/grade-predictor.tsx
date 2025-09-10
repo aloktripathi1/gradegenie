@@ -662,7 +662,6 @@ export default function GradePredictor() {
                       <thead className="bg-zinc-800/50">
                         <tr>
                           <th className="px-4 py-3 text-left text-zinc-300 font-medium">Grade</th>
-                          <th className="px-4 py-3 text-left text-zinc-300 font-medium">Min. Score</th>
                           <th className="px-4 py-3 text-left text-zinc-300 font-medium">Required Final Score</th>
                           <th className="px-4 py-3 text-left text-zinc-300 font-medium">Achievable</th>
                         </tr>
@@ -672,14 +671,11 @@ export default function GradePredictor() {
                           <tr key={score.grade} className="bg-zinc-900/30 hover:bg-zinc-900/60 transition-colors">
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
-                                <div
-                                  className={`text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${getGradeColor(score.grade)}`}
-                                >
-                                  {score.grade}
+                                <div className={`text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${getGradeColor(score.grade)}`}>
+                                  {score.grade}({getMinScoreForGrade(score.grade)}+)
                                 </div>
                               </div>
                             </td>
-                            <td className="px-4 py-3 text-zinc-400">{getMinScoreForGrade(score.grade)}+</td>
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <span
