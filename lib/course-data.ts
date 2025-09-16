@@ -158,11 +158,11 @@ export const courseData: Course[] = [
     name: "Business Data Management",
     degree: "data-science",
     level: "diploma",
-    formula: "T = 0.3 * GA + 0.2 * Q2 + 0.2 * ROE + 0.3 * F",
+    formula: "T = 0.3 * GA + 0.2 * Q2 + 0.2 * Timed Assignment + 0.3 * F",
     formFields: [
       { id: "GA", label: "GA", description: "Graded Assignment Average", max: 100 },
       { id: "Q2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
-      { id: "ROE", label: "ROE", description: "Review of Evaluation", max: 100 },
+      { id: "Timed Assignment", label: "Timed Assignment", description: "Timed Assignment Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
     ],
   },
