@@ -9,19 +9,19 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth; /* Added smooth scrolling here */
   }
 
-  /* Poppins font for all elements */
+  /* Set Segoe UI as the primary font, with Poppins as the first fallback */
   body {
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-      sans-serif;
+    font-family: "Segoe UI", "Poppins", -apple-system, BlinkMacSystemFont, "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
     font-weight: 400;
     letter-spacing: 0.01em;
     font-size: 14px;
     line-height: 1.6;
+    @apply bg-background text-foreground; /* Combined from the other @layer block */
   }
 
-  /* Consistent sizing for larger screens */
   @media (min-width: 768px) {
     body {
       font-size: 16px;
@@ -29,30 +29,29 @@
     }
   }
 
-  /* Force Poppins font everywhere */
-  * {
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-      sans-serif !important;
-  }
-
-  /* Consistent heading styles across all devices */
+  /* Headings will inherit the font from body, but we can keep specific weights */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    /* The font-family declaration is inherited, so we only need to set the weight and spacing */
     font-weight: 600;
     letter-spacing: -0.02em;
   }
 
-  /* Enhanced font rendering */
+  /* Enhanced font rendering for all elements */
   body,
   * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+  
+  /* Apply border-border to all elements */
+  * {
+    @apply border-border;
   }
 
   /* CSS Variables for gradient colors */
