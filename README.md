@@ -1,30 +1,84 @@
-# Grade calculator tool
+# GradeGenie
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+A specialized grade calculator built by an IITM BS student, for IITM BS students. GradeGenie helps you accurately calculate and predict your grades for IITM BS courses using official grading formulas.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/alok-tripathis-projects/v0-grade-calculator-tool)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/hOOGEEagPmO)
+## Features
 
-## Overview
+- **Accurate Calculations**: Implements exact grading formulas used by IITM BS for each course
+- **Grade Predictor**: Predict what you need to achieve your target grade
+- **Course Coverage**: Supports 40+ courses from both Data Science and Electronic Systems degrees
+- **Mobile Friendly**: Calculate your grades on any device, anywhere, anytime
+- **Always Free**: No hidden costs, no subscriptions. Free forever for all students
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## Tech Stack
 
-## Deployment
+- **Framework**: Next.js 14
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Shadcn UI
+- **Animations**: Framer Motion
+- **Icons**: Lucide Icons
 
-Your project is live at:
+## Getting Started
 
-**[https://vercel.com/alok-tripathis-projects/v0-grade-calculator-tool](https://vercel.com/alok-tripathis-projects/v0-grade-calculator-tool)**
+1. Clone the repository:
+```bash
+git clone https://github.com/aloktripathi1/gradegenie.git
+cd gradegenie
+```
 
-## Build your app
+2. Install dependencies:
+```bash
+pnpm install
+```
 
-Continue building your app on:
+3. Run the development server:
+```bash
+pnpm dev
+```
 
-**[https://v0.app/chat/projects/hOOGEEagPmO](https://v0.app/chat/projects/hOOGEEagPmO)**
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## How It Works
+## Project Structure
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+```
+gradegenie/
+├── app/                    # Next.js app directory
+│   ├── about/             # About page
+│   ├── calculator/        # Grade calculator page
+│   ├── predictor/         # Grade predictor page
+│   └── layout.tsx         # Root layout
+├── components/            # React components
+│   ├── ui/               # UI components
+│   ├── grade-calculator.tsx
+│   ├── grade-predictor.tsx
+│   └── score-breakdown.tsx
+├── lib/                  # Utility functions
+├── public/              # Static assets
+└── styles/              # Global styles
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Disclaimer
+
+This project is not affiliated with the Indian Institute of Technology Madras (IITM). It is an independent tool created by a student to help fellow students with grade calculations.
+
+## Contact
+
+- GitHub: [@aloktripathi1](https://github.com/aloktripathi1)
+- LinkedIn: [Alok Tripathi](https://linkedin.com/in/aloktripathi1)
+
+Made with ❤️ by Alok Tripathi
