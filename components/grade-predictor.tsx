@@ -22,6 +22,7 @@ import {
   XCircle,
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Slider } from "@/components/ui/slider"
 import { courseData } from "@/lib/course-data"
 import { calculateScore } from "@/lib/calculate-score"
 import { motion, AnimatePresence } from "framer-motion"
@@ -92,7 +93,7 @@ export default function GradePredictor() {
     }
   }, [selectedCourse])
 
-  const handleInputChange = (fieldId: string, value: string) => {
+  const handleInputChange = (fieldId: string, value: string | number) => {
     // If the input is empty, set to null
     if (value === "") {
       setFormValues({
@@ -251,11 +252,17 @@ export default function GradePredictor() {
       const highestPossibleGrade = requiredScores.find((score) => score.isPossible)?.grade || "F"
       let message = ""
 
+      // Calculate max possible score for display
+      const maxScoreNoBonus = calculateScore(course.id, { ...calculationValues, F: finalExamField.max })
+      let maxPossibleTotal = maxScoreNoBonus
+      if (maxScoreNoBonus >= 40) {
+        maxPossibleTotal += bonusMarks ?? 0
+      }
+
       if (highestPossibleGrade === "F") {
-        message =
-          "Based on your current scores, it's not possible to achieve a passing grade even with a perfect final exam score."
+        message = `Based on your current scores, it's not possible to achieve a passing grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       } else {
-        message = `With your current scores, you can achieve up to a ${highestPossibleGrade} grade with the right final exam score.`
+        message = `With your current scores, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       }
 
       setPrediction({
@@ -517,17 +524,26 @@ export default function GradePredictor() {
                       </TooltipProvider>
                     </div>
                     <div className="relative">
-                      <Input
-                        id={field.id}
-                        type="number"
-                        min="0"
-                        max={field.max}
-                        placeholder={`0-${field.max}`}
-                        value={formValues[field.id] === null ? "" : formValues[field.id]?.toString()}
-                        onChange={(e) => handleInputChange(field.id, e.target.value)}
-                        className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-blue-500 focus:border-blue-500 transition-all group-hover:border-zinc-700 hover:border-zinc-700 h-10 rounded-lg pr-8"
-                      />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Input
+                          id={field.id}
+                          type="number"
+                          min="0"
+                          max={field.max}
+                          placeholder={`0-${field.max}`}
+                          value={formValues[field.id] === null ? "" : formValues[field.id]?.toString()}
+                          onChange={(e) => handleInputChange(field.id, e.target.value)}
+                          className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-blue-500 focus:border-blue-500 transition-all group-hover:border-zinc-700 hover:border-zinc-700 h-10 rounded-lg pr-8 w-24"
+                        />
+                        <Slider
+                          value={[formValues[field.id] || 0]}
+                          max={field.max}
+                          step={1}
+                          onValueChange={(vals) => handleInputChange(field.id, vals[0])}
+                          className="flex-1"
+                        />
+                      </div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs hidden">
                         /{field.max}
                       </div>
                     </div>
@@ -636,7 +652,11 @@ export default function GradePredictor() {
                     <h3 className="text-xl font-bold text-zinc-200">Required Final Exam Scores</h3>
                   </div>
 
-                  <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 mb-6">
+                  <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 mb-6 space-y-2">
+                    <div className="flex justify-between items-center border-b border-zinc-800 pb-2 mb-2">
+                      <span className="text-zinc-400">Current Score (Pre-Final):</span>
+                      <span className="text-zinc-200 font-semibold">{prediction.currentScore?.toFixed(2)}</span>
+                    </div>
                     <p className="text-zinc-300">{prediction.message}</p>
                   </div>
 

@@ -25,6 +25,8 @@ import {
   Zap,
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Slider } from "@/components/ui/slider"
+import { Progress } from "@/components/ui/progress"
 import { courseData } from "@/lib/course-data"
 import { calculateScore } from "@/lib/calculate-score"
 import { assignGrade } from "@/lib/grade-utils"
@@ -105,7 +107,7 @@ export default function GradeCalculator() {
     }
   }, [selectedCourse])
 
-  const handleInputChange = (fieldId: string, value: string) => {
+  const handleInputChange = (fieldId: string, value: string | number) => {
     // If the input is empty, set to null
     if (value === "") {
       setFormValues({
@@ -570,17 +572,26 @@ export default function GradeCalculator() {
                       </TooltipProvider>
                     </div>
                     <div className="relative">
-                      <Input
-                        id={field.id}
-                        type="number"
-                        min="0"
-                        max={field.max}
-                        placeholder={`0-${field.max}`}
-                        value={formValues[field.id] === null ? "" : formValues[field.id]?.toString()}
-                        onChange={(e) => handleInputChange(field.id, e.target.value)}
-                        className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-blue-500 focus:border-blue-500 transition-all group-hover:border-zinc-700 hover:border-zinc-700 h-10 rounded-lg pr-8"
-                      />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Input
+                          id={field.id}
+                          type="number"
+                          min="0"
+                          max={field.max}
+                          placeholder={`0-${field.max}`}
+                          value={formValues[field.id] === null ? "" : formValues[field.id]?.toString()}
+                          onChange={(e) => handleInputChange(field.id, e.target.value)}
+                          className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-blue-500 focus:border-blue-500 transition-all group-hover:border-zinc-700 hover:border-zinc-700 h-10 rounded-lg pr-8 w-24"
+                        />
+                        <Slider
+                          value={[formValues[field.id] || 0]}
+                          max={field.max}
+                          step={1}
+                          onValueChange={(vals) => handleInputChange(field.id, vals[0])}
+                          className="flex-1"
+                        />
+                      </div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs hidden">
                         /{field.max}
                       </div>
                     </div>
@@ -727,14 +738,11 @@ export default function GradeCalculator() {
                       <span className="text-xs text-zinc-500">Pass</span>
                       <span className="text-xs text-zinc-500">Excellent</span>
                     </div>
-                    <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(((result.finalScore || 0) / 100) * 100, 100)}%` }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                      />
-                    </div>
+                    <Progress 
+                      value={Math.min(((result.finalScore || 0) / 100) * 100, 100)} 
+                      className="h-3 bg-zinc-800" 
+                      indicatorClassName="bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                    />
                     <div className="flex justify-between text-xs text-zinc-600 mt-1">
                       <span>0</span>
                       <span>40</span>
