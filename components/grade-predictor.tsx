@@ -23,6 +23,7 @@ import {
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { courseData } from "@/lib/course-data"
+import { calculateScore } from "@/lib/calculate-score"
 import { motion, AnimatePresence } from "framer-motion"
 import type { FormField } from "@/lib/types"
 
@@ -269,24 +270,9 @@ export default function GradePredictor() {
 
   // Calculate score without final exam
   const calculatePartialScore = (courseId: string, values: Record<string, number>): number => {
-    // This is a simplified approach - in a real implementation, you would need to analyze the formula
-    // more carefully to determine the partial score without the final exam
-
-    // For this example, we'll assume the final exam is worth 40% of the total grade
-    // and the other components make up 60%
-
-    // In a real implementation, you would need to extract this information from the course formula
-
-    // For now, let's just return a simple calculation
-    let sum = 0
-    let count = 0
-
-    for (const key in values) {
-      sum += values[key]
-      count++
-    }
-
-    return count > 0 ? sum / count : 0
+    // Calculate the score assuming 0 for the final exam
+    // This gives us the current standing based on other components
+    return calculateScore(courseId, { ...values, F: 0 })
   }
 
   // Calculate required final exam score
@@ -297,41 +283,39 @@ export default function GradePredictor() {
     maxFinalScore: number,
     bonusMarks: number,
   ): number => {
-    // This is a simplified approach - in a real implementation, you would need to analyze the formula
-    // more carefully to determine the exact final exam score needed
+    // Use binary search to find the minimum integer final exam score needed
+    let low = 0
+    let high = maxFinalScore
+    let result = maxFinalScore + 1 // Default to impossible
 
-    // For this example, we'll use a simple approach based on the course ID
-
-    // Get the course formula
-    const course = courseData.find((c) => c.id === courseId)
-    if (!course) return 100 // Default to max score if course not found
-
-    // Different calculation based on course pattern
-    if (courseId.includes("python") || courseId === "python-es") {
-      // Python courses typically have final exam worth 40%
-      const currentScore =
-        0.1 * (values["GAA1"] || 0) +
-        0.1 * (values["GAA2"] || 0) +
-        0.1 * (values["Qz1"] || 0) +
-        0.15 * (values["PE1"] || 0) +
-        0.15 * (values["PE2"] || 0)
-
-      // Target score minus current components, divided by final exam weight
-      const requiredContribution = targetScore - currentScore - (bonusMarks > 0 ? Math.min(bonusMarks, 5) : 0)
-      return requiredContribution / 0.4 // Final exam is 40%
-    } else if (courseId.includes("stats")) {
-      // Stats courses
-      const currentScore = 0.1 * (values["GAA"] || 0) + 0.2 * Math.max(values["Qz1"] || 0, values["Qz2"] || 0)
-
-      const requiredContribution = targetScore - currentScore - (bonusMarks > 0 ? Math.min(bonusMarks, 5) : 0)
-      return requiredContribution / 0.6 // Final exam is 60%
-    } else {
-      // Standard courses
-      const currentScore = 0.1 * (values["GAA"] || 0) + 0.2 * (values["Qz1"] || 0) + 0.3 * (values["Qz2"] || 0)
-
-      const requiredContribution = targetScore - currentScore - (bonusMarks > 0 ? Math.min(bonusMarks, 5) : 0)
-      return requiredContribution / 0.4 // Final exam is 40%
+    // Check if even max score is enough
+    const maxScore = calculateScore(courseId, { ...values, F: maxFinalScore })
+    let maxTotalScore = maxScore
+    if (maxScore >= 40) {
+      maxTotalScore += bonusMarks || 0
     }
+
+    if (maxTotalScore < targetScore) {
+      return result
+    }
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2)
+      const score = calculateScore(courseId, { ...values, F: mid })
+      let totalScore = score
+      if (score >= 40) {
+        totalScore += bonusMarks || 0
+      }
+
+      if (totalScore >= targetScore) {
+        result = mid
+        high = mid - 1
+      } else {
+        low = mid + 1
+      }
+    }
+
+    return result
   }
 
   const resetPredictor = () => {

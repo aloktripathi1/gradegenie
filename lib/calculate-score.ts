@@ -5,6 +5,16 @@ export function calculateScore(courseId: string, values: Record<string, number>)
     case "eng1":
     case "ct":
     case "mds2":
+      return Math.min(
+        (0.1 * values.GAA +
+          Math.max(
+            0.6 * values.F + 0.2 * Math.max(values.Qz1, values.Qz2),
+            0.4 * values.F + 0.2 * values.Qz1 + 0.3 * values.Qz2,
+          )) *
+          (1 + 0.01 * (values.Extra || 0)),
+        100,
+      )
+
     case "eng2":
       return (
         0.1 * values.GAA +
