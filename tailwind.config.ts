@@ -21,17 +21,16 @@ const config = {
     extend: {
       fontFamily: {
         sans: [
-          "Poppins",
+          "Plus Jakarta Sans",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
           "Roboto",
-          "Oxygen",
-          "Ubuntu",
-          "Cantarell",
+          "Helvetica Neue",
+          "Arial",
           "sans-serif",
         ],
-        poppins: ["Poppins", "sans-serif"],
+        jakarta: ["Plus Jakarta Sans", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
