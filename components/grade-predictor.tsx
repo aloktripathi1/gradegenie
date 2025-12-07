@@ -38,6 +38,8 @@ export default function GradePredictor() {
   const [error, setError] = useState<string | null>(null)
   const [prediction, setPrediction] = useState<{
     currentScore: number | null
+    currentScoreNoBonus: number | null
+    bonusApplied: number
     requiredScores: {
       grade: string
       minScore: number
@@ -47,6 +49,8 @@ export default function GradePredictor() {
     message: string | null
   }>({
     currentScore: null,
+    currentScoreNoBonus: null,
+    bonusApplied: 0,
     requiredScores: [],
     message: null,
   })
@@ -62,6 +66,8 @@ export default function GradePredictor() {
     setBonusMarks(null)
     setPrediction({
       currentScore: null,
+      currentScoreNoBonus: null,
+      bonusApplied: 0,
       requiredScores: [],
       message: null,
     })
@@ -86,6 +92,8 @@ export default function GradePredictor() {
         setBonusMarks(null)
         setPrediction({
           currentScore: null,
+          currentScoreNoBonus: null,
+          bonusApplied: 0,
           requiredScores: [],
           message: null,
         })
@@ -219,11 +227,16 @@ export default function GradePredictor() {
       }
 
       // Calculate current score without final exam
-      // We need to create a special function to calculate partial scores
-      const currentPartialScore = calculatePartialScore(course.id, calculationValues)
+      const currentPartialScoreNoBonus = calculatePartialScore(course.id, calculationValues)
 
-      // Use bonus marks from state
+      // Use bonus marks from state and add to current score
       const bonus = bonusMarks ?? 0
+      
+      // Add bonus marks to current score (bonus only applies if base score >= 40)
+      let currentPartialScore = currentPartialScoreNoBonus
+      if (currentPartialScoreNoBonus >= 40 && bonus > 0) {
+        currentPartialScore = Math.min(currentPartialScoreNoBonus + bonus, 100)
+      }
 
       // Calculate required final exam scores for each grade
       const grades = ["S", "A", "B", "C", "D", "E"]
@@ -231,12 +244,14 @@ export default function GradePredictor() {
         const targetScore = getMinScoreForGrade(grade)
 
         // Calculate what final exam score is needed to reach this grade
+        // Now that bonus is already added to current score, we calculate based on the enhanced current score
         const requiredFinalScore = calculateRequiredFinalExamScore(
           course.id,
           calculationValues,
           targetScore,
           finalExamField.max,
-          bonus,
+          currentPartialScore,
+          currentPartialScoreNoBonus,
         )
 
         // Check if it's possible to achieve this grade
@@ -255,25 +270,24 @@ export default function GradePredictor() {
       let message = ""
 
       // Calculate max possible score for display
-      const maxScoreNoBonus = calculateScore(course.id, { ...calculationValues, F: finalExamField.max })
-      let maxPossibleTotal = maxScoreNoBonus
-      const bonusWillApply = maxScoreNoBonus >= 40 && bonus > 0
+      const maxScoreWithMaxFinal = calculateScore(course.id, { ...calculationValues, F: finalExamField.max })
+      let maxPossibleTotal = maxScoreWithMaxFinal
       
-      if (bonusWillApply) {
-        maxPossibleTotal = Math.min(maxScoreNoBonus + bonus, 100)
+      // Add bonus to max possible total if applicable
+      if (maxScoreWithMaxFinal >= 40 && bonus > 0) {
+        maxPossibleTotal = Math.min(maxScoreWithMaxFinal + bonus, 100)
       }
 
       if (highestPossibleGrade === "F") {
         message = `Based on your current scores, it's not possible to achieve a passing grade (E or above). Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       } else {
-        message = `With your current scores, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
-        if (bonusWillApply) {
-          message += ` This includes ${bonus} bonus marks.`
-        }
+        message = `With your current scores${bonus > 0 && currentPartialScoreNoBonus >= 40 ? ` (including ${bonus} bonus marks)` : ''}, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       }
 
       setPrediction({
         currentScore: currentPartialScore,
+        currentScoreNoBonus: currentPartialScoreNoBonus,
+        bonusApplied: currentPartialScoreNoBonus >= 40 ? bonus : 0,
         requiredScores,
         message,
       })
@@ -295,61 +309,40 @@ export default function GradePredictor() {
     values: Record<string, number>,
     targetScore: number,
     maxFinalScore: number,
-    bonusMarks: number,
+    currentScoreWithBonus: number,
+    currentScoreNoBonus: number,
   ): number => {
-    // First, check if we need to consider bonus (target might be achievable with or without bonus)
-    // Try to find the minimum final score needed WITHOUT bonus first
-    let resultWithoutBonus = maxFinalScore + 1
+    // Since bonus is already added to current score, we just need to find
+    // what final exam score will get us to the target
     
-    // Binary search for score without bonus
+    // Use binary search to find minimum final exam score needed
     let low = 0
     let high = maxFinalScore
+    let result = maxFinalScore + 1
     
     while (low <= high) {
       const mid = Math.floor((low + high) / 2)
-      const score = calculateScore(courseId, { ...values, F: mid })
       
-      if (score >= targetScore) {
-        resultWithoutBonus = mid
+      // Calculate total score with this final exam score
+      const scoreNoBonus = calculateScore(courseId, { ...values, F: mid })
+      
+      // Add bonus if applicable (base score >= 40)
+      let totalScore = scoreNoBonus
+      if (scoreNoBonus >= 40 && currentScoreWithBonus > currentScoreNoBonus) {
+        // Bonus was applied to current score, so it should apply here too
+        const bonusAmount = currentScoreWithBonus - currentScoreNoBonus
+        totalScore = Math.min(scoreNoBonus + bonusAmount, 100)
+      }
+      
+      if (totalScore >= targetScore) {
+        result = mid
         high = mid - 1
       } else {
         low = mid + 1
       }
     }
     
-    // If achievable without bonus, return that
-    if (resultWithoutBonus <= maxFinalScore) {
-      return resultWithoutBonus
-    }
-    
-    // If bonus is available, try with bonus
-    if (bonusMarks > 0) {
-      low = 0
-      high = maxFinalScore
-      let resultWithBonus = maxFinalScore + 1
-      
-      while (low <= high) {
-        const mid = Math.floor((low + high) / 2)
-        const score = calculateScore(courseId, { ...values, F: mid })
-        let totalScore = score
-        
-        // Bonus only applies if base score >= 40
-        if (score >= 40) {
-          totalScore = Math.min(score + bonusMarks, 100)
-        }
-        
-        if (totalScore >= targetScore) {
-          resultWithBonus = mid
-          high = mid - 1
-        } else {
-          low = mid + 1
-        }
-      }
-      
-      return resultWithBonus
-    }
-    
-    return resultWithoutBonus
+    return result
   }
 
   const resetPredictor = () => {
@@ -362,6 +355,8 @@ export default function GradePredictor() {
     setBonusMarks(null)
     setPrediction({
       currentScore: null,
+      currentScoreNoBonus: null,
+      bonusApplied: 0,
       requiredScores: [],
       message: null,
     })
@@ -681,15 +676,34 @@ export default function GradePredictor() {
                   </div>
 
                   <div className="bg-white/[0.05] backdrop-blur-sm border border-white/[0.12] rounded-xl p-6 mb-8 space-y-3">
-                    <div className="flex justify-between items-center border-b border-white/10 pb-3 mb-3">
-                      <span className="text-white/60 font-medium">Current Score (Pre-Final):</span>
-                      <span className="text-white font-bold text-lg">{prediction.currentScore?.toFixed(2)}</span>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-white/60 font-medium">Current Score (Before Final):</span>
+                        <span className="text-white font-bold text-lg">{prediction.currentScoreNoBonus?.toFixed(2)}</span>
+                      </div>
+                      {prediction.bonusApplied > 0 && (
+                        <>
+                          <div className="flex justify-between items-center text-emerald-400">
+                            <span className="font-medium flex items-center gap-2">
+                              <Sparkles className="h-4 w-4" />
+                              Bonus Marks Added:
+                            </span>
+                            <span className="font-bold text-lg">+{prediction.bonusApplied}</span>
+                          </div>
+                          <div className="flex justify-between items-center border-t border-white/10 pt-2">
+                            <span className="text-white font-semibold">Total Current Score:</span>
+                            <span className="text-emerald-400 font-bold text-xl">{prediction.currentScore?.toFixed(2)}</span>
+                          </div>
+                        </>
+                      )}
                     </div>
-                    <p className="text-white/80 leading-relaxed">{prediction.message}</p>
-                    {bonusMarks && bonusMarks > 0 && (
-                      <p className="text-emerald-400 text-sm mt-3 flex items-center gap-2 bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                    <div className="border-t border-white/10 pt-3 mt-3">
+                      <p className="text-white/80 leading-relaxed">{prediction.message}</p>
+                    </div>
+                    {prediction.bonusApplied > 0 && (
+                      <p className="text-emerald-400 text-sm flex items-center gap-2 bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
                         <Sparkles className="h-4 w-4" />
-                        Note: Bonus marks ({bonusMarks}) will be applied only if your total score ≥ 40
+                        Bonus marks are already included in the calculations above. Required final scores shown below account for your bonus.
                       </p>
                     )}
                   </div>
