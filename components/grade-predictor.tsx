@@ -255,14 +255,19 @@ export default function GradePredictor() {
       // Calculate max possible score for display
       const maxScoreNoBonus = calculateScore(course.id, { ...calculationValues, F: finalExamField.max })
       let maxPossibleTotal = maxScoreNoBonus
-      if (maxScoreNoBonus >= 40) {
-        maxPossibleTotal += bonusMarks ?? 0
+      const bonusWillApply = maxScoreNoBonus >= 40 && bonusMarks && bonusMarks > 0
+      
+      if (bonusWillApply) {
+        maxPossibleTotal = Math.min(maxScoreNoBonus + (bonusMarks || 0), 100)
       }
 
       if (highestPossibleGrade === "F") {
-        message = `Based on your current scores, it's not possible to achieve a passing grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
+        message = `Based on your current scores, it's not possible to achieve a passing grade (E or above). Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       } else {
         message = `With your current scores, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
+        if (bonusWillApply) {
+          message += ` This includes ${bonusMarks} bonus marks.`
+        }
       }
 
       setPrediction({
@@ -290,39 +295,59 @@ export default function GradePredictor() {
     maxFinalScore: number,
     bonusMarks: number,
   ): number => {
-    // Use binary search to find the minimum integer final exam score needed
+    // First, check if we need to consider bonus (target might be achievable with or without bonus)
+    // Try to find the minimum final score needed WITHOUT bonus first
+    let resultWithoutBonus = maxFinalScore + 1
+    
+    // Binary search for score without bonus
     let low = 0
     let high = maxFinalScore
-    let result = maxFinalScore + 1 // Default to impossible
-
-    // Check if even max score is enough
-    const maxScore = calculateScore(courseId, { ...values, F: maxFinalScore })
-    let maxTotalScore = maxScore
-    if (maxScore >= 40) {
-      maxTotalScore += bonusMarks || 0
-    }
-
-    if (maxTotalScore < targetScore) {
-      return result
-    }
-
+    
     while (low <= high) {
       const mid = Math.floor((low + high) / 2)
       const score = calculateScore(courseId, { ...values, F: mid })
-      let totalScore = score
-      if (score >= 40) {
-        totalScore += bonusMarks || 0
-      }
-
-      if (totalScore >= targetScore) {
-        result = mid
+      
+      if (score >= targetScore) {
+        resultWithoutBonus = mid
         high = mid - 1
       } else {
         low = mid + 1
       }
     }
-
-    return result
+    
+    // If achievable without bonus, return that
+    if (resultWithoutBonus <= maxFinalScore) {
+      return resultWithoutBonus
+    }
+    
+    // If bonus is available, try with bonus
+    if (bonusMarks > 0) {
+      low = 0
+      high = maxFinalScore
+      let resultWithBonus = maxFinalScore + 1
+      
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2)
+        const score = calculateScore(courseId, { ...values, F: mid })
+        let totalScore = score
+        
+        // Bonus only applies if base score >= 40
+        if (score >= 40) {
+          totalScore = Math.min(score + bonusMarks, 100)
+        }
+        
+        if (totalScore >= targetScore) {
+          resultWithBonus = mid
+          high = mid - 1
+        } else {
+          low = mid + 1
+        }
+      }
+      
+      return resultWithBonus
+    }
+    
+    return resultWithoutBonus
   }
 
   const resetPredictor = () => {
@@ -352,13 +377,12 @@ export default function GradePredictor() {
   }
 
   return (
-    <Card className="w-full shadow-2xl bg-black border border-zinc-800 rounded-xl overflow-hidden backdrop-blur-sm">
+    <Card className="w-full shadow-2xl bg-slate-900/70 border border-white/[0.08] rounded-3xl overflow-hidden backdrop-blur-2xl">
       {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-amber-600/5 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-rose-600/5 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-teal-600/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-amber-500/10 to-rose-500/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-teal-500/10 to-cyan-500/5 rounded-full blur-3xl -z-10"></div>
 
-      <CardContent className="p-4 sm:p-6 space-y-8 relative">
+      <CardContent className="p-8 sm:p-10 space-y-8 relative">
         {/* Course Selection */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -367,22 +391,22 @@ export default function GradePredictor() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           <div className="relative group">
-            <Label htmlFor="degree" className="text-zinc-400 mb-2 block flex items-center gap-2 text-sm font-medium">
+            <Label htmlFor="degree" className="text-white/70 mb-2.5 block flex items-center gap-2 text-sm font-semibold">
               <GraduationCap className="h-4 w-4 text-amber-400" />
               Degree Program
             </Label>
             <Select value={degree} onValueChange={setDegree}>
               <SelectTrigger
                 id="degree"
-                className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 transition-all group-hover:border-amber-500 hover:bg-zinc-800/80 h-10 rounded-lg"
+                className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white transition-all hover:border-amber-400/60 hover:bg-white/[0.08] h-12 rounded-xl shadow-sm"
               >
                 <SelectValue placeholder="Select Degree" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800 rounded-lg">
-                <SelectItem value="data-science" className="text-zinc-300 focus:bg-amber-600 focus:text-white">
+              <SelectContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 rounded-xl shadow-2xl">
+                <SelectItem value="data-science" className="text-white focus:bg-amber-600 focus:text-white rounded-lg">
                   Data Science
                 </SelectItem>
-                <SelectItem value="electronic-systems" className="text-zinc-300 focus:bg-amber-600 focus:text-white">
+                <SelectItem value="electronic-systems" className="text-white focus:bg-amber-600 focus:text-white rounded-lg">
                   Electronic Systems
                 </SelectItem>
               </SelectContent>
@@ -390,25 +414,25 @@ export default function GradePredictor() {
           </div>
 
           <div className="relative group">
-            <Label htmlFor="level" className="text-zinc-400 mb-2 block flex items-center gap-2 text-sm font-medium">
+            <Label htmlFor="level" className="text-white/70 mb-2.5 block flex items-center gap-2 text-sm font-semibold">
               <BookOpen className="h-4 w-4 text-rose-400" />
               Course Level
             </Label>
             <Select value={level} onValueChange={setLevel}>
               <SelectTrigger
                 id="level"
-                className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 transition-all group-hover:border-rose-500 hover:bg-zinc-800/80 h-10 rounded-lg"
+                className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white transition-all hover:border-rose-400/60 hover:bg-white/[0.08] h-12 rounded-xl shadow-sm"
               >
                 <SelectValue placeholder="Select Level" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800 rounded-lg">
-                <SelectItem value="foundation" className="text-zinc-300 focus:bg-rose-600 focus:text-white">
+              <SelectContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 rounded-xl shadow-2xl">
+                <SelectItem value="foundation" className="text-white focus:bg-rose-600 focus:text-white rounded-lg">
                   Foundation
                 </SelectItem>
-                <SelectItem value="diploma" className="text-zinc-300 focus:bg-rose-600 focus:text-white">
+                <SelectItem value="diploma" className="text-white focus:bg-rose-600 focus:text-white rounded-lg">
                   Diploma
                 </SelectItem>
-                <SelectItem value="degree" className="text-zinc-300 focus:bg-rose-600 focus:text-white">
+                <SelectItem value="degree" className="text-white focus:bg-rose-600 focus:text-white rounded-lg">
                   Degree
                 </SelectItem>
               </SelectContent>
@@ -416,23 +440,23 @@ export default function GradePredictor() {
           </div>
 
           <div className="relative group">
-            <Label htmlFor="course" className="text-zinc-400 mb-2 block flex items-center gap-2 text-sm font-medium">
+            <Label htmlFor="course" className="text-white/70 mb-2.5 block flex items-center gap-2 text-sm font-semibold">
               <FileText className="h-4 w-4 text-teal-400" />
               Course Name
             </Label>
             <Select value={selectedCourse} onValueChange={setSelectedCourse}>
               <SelectTrigger
                 id="course"
-                className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 transition-all group-hover:border-teal-500 hover:bg-zinc-800/80 h-10 rounded-lg"
+                className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white transition-all hover:border-teal-400/60 hover:bg-white/[0.08] h-12 rounded-xl shadow-sm"
               >
                 <SelectValue placeholder="Select Course" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800 max-h-[300px] rounded-lg">
+              <SelectContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 max-h-[300px] rounded-xl shadow-2xl">
                 {filteredCourses.map((course) => (
                   <SelectItem
                     key={course.id}
                     value={course.id}
-                    className="text-zinc-300 focus:bg-teal-600 focus:text-white"
+                    className="text-white focus:bg-teal-600 focus:text-white rounded-lg"
                   >
                     {course.name}
                   </SelectItem>
@@ -451,7 +475,7 @@ export default function GradePredictor() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <Alert variant="destructive" className="bg-red-950/30 border-red-900 text-red-200 rounded-lg">
+              <Alert variant="destructive" className="bg-red-900/20 border-red-500/30 text-red-200 rounded-xl">
                 <AlertTriangle className="h-4 w-4 text-red-400" />
                 <AlertDescription className="text-red-200">{error}</AlertDescription>
               </Alert>
@@ -474,17 +498,17 @@ export default function GradePredictor() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="bg-gradient-to-br from-zinc-900/80 to-zinc-950/80 backdrop-blur-sm border border-zinc-800 rounded-xl p-4 shadow-lg"
+                className="bg-gradient-to-br from-white/[0.08] to-white/[0.04] backdrop-blur-xl border border-white/[0.15] rounded-2xl p-6 shadow-lg"
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-gradient-to-br from-amber-500 to-rose-600 p-2 rounded-lg">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-gradient-to-br from-amber-500 via-amber-600 to-rose-600 p-2.5 rounded-xl shadow-lg shadow-amber-500/20">
                     <Target className="h-5 w-5 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-zinc-200">
+                  <h3 className="text-lg font-bold text-white">
                     Grade Predictor for {courseData.find((c) => c.id === selectedCourse)?.name}
                   </h3>
                 </div>
-                <p className="text-zinc-400 text-sm">
+                <p className="text-white/70 text-sm leading-relaxed">
                   Enter your current scores for all components except the final exam. We'll calculate the minimum final
                   exam score you need to achieve each grade.
                 </p>
@@ -500,22 +524,22 @@ export default function GradePredictor() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, delay: index * 0.05 }}
                   >
-                    <div className="flex items-center gap-1.5">
-                      <div className="p-1.5 rounded-md bg-zinc-900/80 border border-zinc-800 group-hover:border-zinc-700 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-white/[0.08] border border-white/[0.15] group-hover:border-white/25 transition-all duration-300 shadow-sm">
                         {getFieldIcon(field.id)}
                       </div>
                       <Label
                         htmlFor={field.id}
-                        className="text-zinc-400 group-hover:text-zinc-300 transition-colors flex items-center gap-2 text-sm font-medium"
+                        className="text-white/70 group-hover:text-white/90 transition-colors flex items-center gap-2 text-sm font-semibold"
                       >
                         {field.label}
                       </Label>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <HelpCircle className="h-3.5 w-3.5 text-zinc-600 cursor-help group-hover:text-zinc-500 transition-colors" />
+                            <HelpCircle className="h-3.5 w-3.5 text-white/30 cursor-help group-hover:text-white/50 transition-colors" />
                           </TooltipTrigger>
-                          <TooltipContent className="bg-zinc-900 border-zinc-800 text-zinc-300 rounded-lg">
+                          <TooltipContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-white rounded-xl shadow-2xl">
                             <p>
                               {field.description} (Max: {field.max})
                             </p>
@@ -533,7 +557,7 @@ export default function GradePredictor() {
                           placeholder={`0-${field.max}`}
                           value={formValues[field.id] === null ? "" : formValues[field.id]?.toString()}
                           onChange={(e) => handleInputChange(field.id, e.target.value)}
-                          className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-blue-500 focus:border-blue-500 transition-all group-hover:border-zinc-700 hover:border-zinc-700 h-10 rounded-lg pr-8 w-24"
+                          className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white placeholder:text-white/40 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all group-hover:border-white/20 hover:bg-white/[0.08] h-11 rounded-xl pr-8 w-28 shadow-sm font-medium"
                         />
                         <Slider
                           value={[formValues[field.id] || 0]}
@@ -557,22 +581,22 @@ export default function GradePredictor() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
                 >
-                  <div className="flex items-center gap-1.5">
-                    <div className="p-1.5 rounded-md bg-zinc-900/80 border border-zinc-800 group-hover:border-green-800 transition-colors">
-                      <Sparkles className="h-4 w-4 text-green-400" />
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-white/[0.08] border border-white/[0.15] group-hover:border-emerald-500/40 transition-all duration-300 shadow-sm">
+                      <Sparkles className="h-4 w-4 text-emerald-400" />
                     </div>
                     <Label
                       htmlFor="bonus"
-                      className="text-zinc-400 group-hover:text-green-400 transition-colors flex items-center gap-2 text-sm font-medium"
+                      className="text-white/70 group-hover:text-emerald-400 transition-colors flex items-center gap-2 text-sm font-semibold"
                     >
                       Bonus Marks
                     </Label>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <HelpCircle className="h-3.5 w-3.5 text-zinc-600 cursor-help group-hover:text-green-600 transition-colors" />
+                          <HelpCircle className="h-3.5 w-3.5 text-white/30 cursor-help group-hover:text-emerald-400/70 transition-colors" />
                         </TooltipTrigger>
-                        <TooltipContent className="bg-zinc-900 border-zinc-800 text-zinc-300 rounded-lg">
+                        <TooltipContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-white rounded-xl shadow-2xl">
                           <p>Bonus marks (out of 5) are applied only if your total score is ≥ 40</p>
                         </TooltipContent>
                       </Tooltip>
@@ -587,16 +611,16 @@ export default function GradePredictor() {
                       placeholder="0-5"
                       value={bonusMarks === null ? "" : bonusMarks.toString()}
                       onChange={(e) => handleBonusChange(e.target.value)}
-                      className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-green-500 focus:border-green-500 transition-all group-hover:border-green-800 hover:border-zinc-700 h-10 rounded-lg pr-8"
+                      className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all group-hover:border-emerald-500/30 hover:bg-white/[0.08] h-11 rounded-xl pr-10 shadow-sm font-medium"
                     />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs">/5</div>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 text-xs font-medium">/5</div>
                   </div>
                 </motion.div>
               </div>
 
               {/* Action Buttons */}
               <motion.div
-                className="flex flex-wrap justify-between gap-4 pt-2"
+                className="flex flex-wrap justify-between gap-4 pt-4"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.3 }}
@@ -604,13 +628,13 @@ export default function GradePredictor() {
                 <Button
                   variant="outline"
                   onClick={resetPredictor}
-                  className="flex items-center gap-2 bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 hover:bg-zinc-800/80 transition-all rounded-lg h-10 px-4"
+                  className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/20 transition-all rounded-xl h-11 px-6 shadow-sm font-semibold"
                 >
                   <RefreshCw className="h-4 w-4" /> Reset Values
                 </Button>
                 <Button
                   onClick={calculateRequiredFinalScore}
-                  className="bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 text-white shadow-lg shadow-amber-700/10 transition-all flex items-center gap-2 rounded-lg h-10 px-5"
+                  className="bg-gradient-to-r from-amber-600 via-amber-500 to-rose-600 hover:from-amber-700 hover:via-amber-600 hover:to-rose-700 text-white shadow-xl shadow-amber-600/20 hover:shadow-amber-600/30 transition-all flex items-center gap-2 rounded-xl h-11 px-8 font-bold"
                 >
                   <Target className="h-4 w-4" /> Predict Required Scores
                 </Button>
@@ -631,69 +655,77 @@ export default function GradePredictor() {
             >
               {/* Prediction Display */}
               <motion.div
-                className="relative overflow-hidden rounded-xl shadow-2xl"
+                className="relative overflow-hidden rounded-2xl shadow-2xl"
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.4, type: "spring" }}
+                style={{
+                  background: "linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95))",
+                  backdropFilter: "blur(20px) saturate(180%)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)"
+                }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-zinc-950"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-rose-500/10 opacity-50"></div>
-
                 {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-rose-500/20 rounded-full blur-2xl"></div>
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-br from-teal-500/20 to-emerald-500/20 rounded-full blur-2xl"></div>
+                <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-amber-500/15 to-rose-500/15 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-br from-teal-500/15 to-emerald-500/15 rounded-full blur-3xl"></div>
 
                 {/* Prediction content */}
-                <div className="relative p-6 sm:p-8">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="bg-gradient-to-br from-amber-500 to-rose-600 p-2.5 rounded-xl shadow-lg">
+                <div className="relative p-8 sm:p-10">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="bg-gradient-to-br from-amber-500 via-amber-600 to-rose-600 p-3 rounded-xl shadow-xl shadow-amber-500/20">
                       <Award className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-zinc-200">Required Final Exam Scores</h3>
+                    <h3 className="text-2xl font-black text-white">Required Final Exam Scores</h3>
                   </div>
 
-                  <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 mb-6 space-y-2">
-                    <div className="flex justify-between items-center border-b border-zinc-800 pb-2 mb-2">
-                      <span className="text-zinc-400">Current Score (Pre-Final):</span>
-                      <span className="text-zinc-200 font-semibold">{prediction.currentScore?.toFixed(2)}</span>
+                  <div className="bg-white/[0.05] backdrop-blur-sm border border-white/[0.12] rounded-xl p-6 mb-8 space-y-3">
+                    <div className="flex justify-between items-center border-b border-white/10 pb-3 mb-3">
+                      <span className="text-white/60 font-medium">Current Score (Pre-Final):</span>
+                      <span className="text-white font-bold text-lg">{prediction.currentScore?.toFixed(2)}</span>
                     </div>
-                    <p className="text-zinc-300">{prediction.message}</p>
+                    <p className="text-white/80 leading-relaxed">{prediction.message}</p>
+                    {bonusMarks && bonusMarks > 0 && (
+                      <p className="text-emerald-400 text-sm mt-3 flex items-center gap-2 bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                        <Sparkles className="h-4 w-4" />
+                        Note: Bonus marks ({bonusMarks}) will be applied only if your total score ≥ 40
+                      </p>
+                    )}
                   </div>
 
                   {/* Table of required scores */}
-                  <div className="overflow-hidden rounded-lg border border-zinc-800 mb-6">
+                  <div className="overflow-hidden rounded-xl border border-white/[0.12] mb-6 backdrop-blur-sm">
                     <table className="w-full text-sm">
-                      <thead className="bg-zinc-800/50">
+                      <thead className="bg-white/[0.08]">
                         <tr>
-                          <th className="px-4 py-3 text-left text-zinc-300 font-medium">Grade</th>
-                          <th className="px-4 py-3 text-left text-zinc-300 font-medium">Min. Score</th>
-                          <th className="px-4 py-3 text-left text-zinc-300 font-medium">Required Final Score</th>
-                          <th className="px-4 py-3 text-left text-zinc-300 font-medium">Achievable</th>
+                          <th className="px-5 py-4 text-left text-white/80 font-bold">Grade</th>
+                          <th className="px-5 py-4 text-left text-white/80 font-bold">Min. Score</th>
+                          <th className="px-5 py-4 text-left text-white/80 font-bold">Required Final Score</th>
+                          <th className="px-5 py-4 text-left text-white/80 font-bold">Achievable</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-zinc-800">
+                      <tbody className="divide-y divide-white/[0.08]">
                         {prediction.requiredScores.map((score) => (
-                          <tr key={score.grade} className="bg-zinc-900/30 hover:bg-zinc-900/60 transition-colors">
-                            <td className="px-4 py-3">
+                          <tr key={score.grade} className="bg-white/[0.03] hover:bg-white/[0.06] transition-colors">
+                            <td className="px-5 py-4">
                               <div className="flex items-center gap-2">
                                 <div
-                                  className={`text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${getGradeColor(score.grade)}`}
+                                  className={`text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r ${getGradeColor(score.grade)}`}
                                 >
                                   {score.grade}
                                 </div>
                               </div>
                             </td>
-                            <td className="px-4 py-3 text-zinc-400">{getMinScoreForGrade(score.grade)}+</td>
-                            <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
+                            <td className="px-5 py-4 text-white/60 font-medium">{getMinScoreForGrade(score.grade)}+</td>
+                            <td className="px-5 py-4">
+                              <div className="flex items-center gap-3">
                                 <span
-                                  className={`font-semibold ${score.isPossible ? "text-zinc-200" : "text-zinc-500"}`}
+                                  className={`font-bold text-lg ${score.isPossible ? "text-white" : "text-white/30"}`}
                                 >
                                   {score.minScore}
                                 </span>
-                                <div className="w-16 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                <div className="w-20 h-2.5 bg-white/10 rounded-full overflow-hidden">
                                   <div
-                                    className={`h-full rounded-full ${score.isPossible ? "bg-gradient-to-r from-amber-600 to-rose-600" : "bg-zinc-700"}`}
+                                    className={`h-full rounded-full ${score.isPossible ? "bg-gradient-to-r from-amber-500 to-rose-600 shadow-sm" : "bg-white/20"}`}
                                     style={{
                                       width: `${Math.min((score.minScore / score.maxPossibleScore) * 100, 100)}%`,
                                     }}
@@ -701,14 +733,14 @@ export default function GradePredictor() {
                                 </div>
                               </div>
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-5 py-4">
                               {score.isPossible ? (
-                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs font-medium">
-                                  <CheckCircle2 className="h-3 w-3" /> Yes
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
+                                  <CheckCircle2 className="h-3.5 w-3.5" /> Yes
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs font-medium">
-                                  <XCircle className="h-3 w-3" /> No
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/30">
+                                  <XCircle className="h-3.5 w-3.5" /> No
                                 </span>
                               )}
                             </td>
@@ -718,12 +750,12 @@ export default function GradePredictor() {
                     </table>
                   </div>
 
-                  <div className="text-xs text-zinc-500 mt-4">
-                    <p>
+                  <div className="text-xs text-white/40 mt-6 space-y-1.5 bg-white/[0.03] rounded-lg p-4 border border-white/[0.08]">
+                    <p className="font-medium">
                       Note: These calculations are approximations based on the course formula. The actual required
                       scores may vary slightly.
                     </p>
-                    <p className="mt-1">Final exam maximum score: 100 points</p>
+                    <p>Final exam maximum score: 100 points</p>
                   </div>
                 </div>
               </motion.div>
