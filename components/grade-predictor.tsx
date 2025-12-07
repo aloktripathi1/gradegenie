@@ -312,8 +312,9 @@ export default function GradePredictor() {
     currentScoreWithBonus: number,
     currentScoreNoBonus: number,
   ): number => {
-    // Since bonus is already added to current score, we just need to find
-    // what final exam score will get us to the target
+    // Determine if bonus should be applied (based on whether it was applied to current score)
+    const bonusAmount = currentScoreWithBonus - currentScoreNoBonus
+    const hasBonusToApply = bonusAmount > 0
     
     // Use binary search to find minimum final exam score needed
     let low = 0
@@ -323,14 +324,12 @@ export default function GradePredictor() {
     while (low <= high) {
       const mid = Math.floor((low + high) / 2)
       
-      // Calculate total score with this final exam score
+      // Calculate total score with this final exam score (without bonus)
       const scoreNoBonus = calculateScore(courseId, { ...values, F: mid })
       
-      // Add bonus if applicable (base score >= 40)
+      // Add bonus if applicable (base score >= 40 and bonus was given)
       let totalScore = scoreNoBonus
-      if (scoreNoBonus >= 40 && currentScoreWithBonus > currentScoreNoBonus) {
-        // Bonus was applied to current score, so it should apply here too
-        const bonusAmount = currentScoreWithBonus - currentScoreNoBonus
+      if (hasBonusToApply && scoreNoBonus >= 40) {
         totalScore = Math.min(scoreNoBonus + bonusAmount, 100)
       }
       
