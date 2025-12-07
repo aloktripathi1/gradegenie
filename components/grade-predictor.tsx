@@ -232,9 +232,9 @@ export default function GradePredictor() {
       // Use bonus marks from state and add to current score
       const bonus = bonusMarks ?? 0
       
-      // Add bonus marks to current score (bonus only applies if base score >= 40)
+      // Add bonus marks to current score
       let currentPartialScore = currentPartialScoreNoBonus
-      if (currentPartialScoreNoBonus >= 40 && bonus > 0) {
+      if (bonus > 0) {
         currentPartialScore = Math.min(currentPartialScoreNoBonus + bonus, 100)
       }
 
@@ -273,21 +273,21 @@ export default function GradePredictor() {
       const maxScoreWithMaxFinal = calculateScore(course.id, { ...calculationValues, F: finalExamField.max })
       let maxPossibleTotal = maxScoreWithMaxFinal
       
-      // Add bonus to max possible total if applicable
-      if (maxScoreWithMaxFinal >= 40 && bonus > 0) {
+      // Add bonus to max possible total
+      if (bonus > 0) {
         maxPossibleTotal = Math.min(maxScoreWithMaxFinal + bonus, 100)
       }
 
       if (highestPossibleGrade === "F") {
         message = `Based on your current scores, it's not possible to achieve a passing grade (E or above). Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       } else {
-        message = `With your current scores${bonus > 0 && currentPartialScoreNoBonus >= 40 ? ` (including ${bonus} bonus marks)` : ''}, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
+        message = `With your current scores${bonus > 0 ? ` (including ${bonus} bonus marks)` : ''}, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       }
 
       setPrediction({
         currentScore: currentPartialScore,
         currentScoreNoBonus: currentPartialScoreNoBonus,
-        bonusApplied: currentPartialScoreNoBonus >= 40 ? bonus : 0,
+        bonusApplied: bonus,
         requiredScores,
         message,
       })
@@ -327,9 +327,9 @@ export default function GradePredictor() {
       // Calculate total score with this final exam score (without bonus)
       const scoreNoBonus = calculateScore(courseId, { ...values, F: mid })
       
-      // Add bonus if applicable (base score >= 40 and bonus was given)
+      // Add bonus if applicable
       let totalScore = scoreNoBonus
-      if (hasBonusToApply && scoreNoBonus >= 40) {
+      if (hasBonusToApply) {
         totalScore = Math.min(scoreNoBonus + bonusAmount, 100)
       }
       
@@ -593,7 +593,7 @@ export default function GradePredictor() {
                           <HelpCircle className="h-3.5 w-3.5 text-white/30 cursor-help group-hover:text-emerald-400/70 transition-colors" />
                         </TooltipTrigger>
                         <TooltipContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-white rounded-xl shadow-2xl">
-                          <p>Bonus marks (out of 5) are applied only if your total score is ≥ 40</p>
+                          <p>Bonus marks (out of 5) will be added to your total score</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -702,7 +702,7 @@ export default function GradePredictor() {
                     {prediction.bonusApplied > 0 && (
                       <p className="text-emerald-400 text-sm flex items-center gap-2 bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
                         <Sparkles className="h-4 w-4" />
-                        Bonus marks are already included in the calculations above. Required final scores shown below account for your bonus.
+                        Your {prediction.bonusApplied} bonus marks are already included in all calculations. Required final scores shown below account for your bonus.
                       </p>
                     )}
                   </div>
