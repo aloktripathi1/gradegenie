@@ -25,28 +25,27 @@ export function SiteHeader() {
   // Render immediately without waiting for mount
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass-dark shadow-lg shadow-black/10" : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled ? "shadow-xl shadow-black/10" : "bg-transparent"
       }`}
       style={{
-        background: scrolled ? "rgba(0, 0, 0, 0.8)" : "rgba(0, 0, 0, 0.1)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
+        background: scrolled ? "rgba(8, 12, 20, 0.9)" : "rgba(8, 12, 20, 0.6)",
+        backdropFilter: "blur(20px) saturate(180%)",
+        WebkitBackdropFilter: "blur(20px) saturate(180%)",
+        borderBottom: scrolled ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(255, 255, 255, 0.06)",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-200">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-all duration-300 group">
               <div className="relative">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/30 transition-all duration-300">
                   <GraduationCap className="h-5 w-5 text-white" />
                 </div>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 opacity-20 blur-md"></div>
               </div>
-              <span className="text-xl font-semibold text-white tracking-tight">GradeGenie</span>
+              <span className="text-xl font-bold text-white tracking-tight">GradeGenie</span>
             </Link>
           </div>
 
@@ -61,9 +60,10 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-4 py-2 text-sm font-medium text-white/80 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/10 backdrop-blur-sm"
+                className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group"
               >
-                {item.label}
+                <span className="relative z-10">{item.label}</span>
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </Link>
             ))}
           </nav>
@@ -73,7 +73,7 @@ export function SiteHeader() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/10 backdrop-blur-sm"
+              className="text-white hover:bg-white/5"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mounted ? (
