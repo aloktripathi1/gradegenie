@@ -68,39 +68,41 @@ export default function ClientHomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white overflow-hidden">
       {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-full blur-3xl animate-pulse opacity-60"></div>
+        <div className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-gradient-to-r from-emerald-500/8 to-teal-500/8 rounded-full blur-3xl animate-pulse opacity-60"></div>
         <div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse opacity-60"
+          className="absolute bottom-1/4 right-1/4 w-[32rem] h-[32rem] bg-gradient-to-r from-blue-500/8 to-cyan-500/8 rounded-full blur-3xl animate-pulse opacity-60"
           style={{ animationDelay: "2s" }}
         ></div>
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-indigo-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse opacity-40"
-          style={{ animationDelay: "4s" }}
-        ></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.05),transparent_50%)]" />
       </div>
 
       <SiteHeader />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div className="text-center lg:text-left">
               {/* Floating Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="inline-flex items-center gap-3 px-6 py-3 rounded-full mb-8 relative group liquid-glass"
+                className="inline-flex items-center gap-3 px-5 py-3 rounded-full mb-8 relative group"
+                style={{
+                  background: "rgba(255, 255, 255, 0.04)",
+                  backdropFilter: "blur(20px) saturate(180%)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+                }}
               >
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50"></div>
                   <Sparkles className="h-4 w-4 text-emerald-400" />
-                  <span className="text-white/90 font-medium text-sm">Exclusively for IITM BS Students</span>
+                  <span className="text-white font-semibold text-sm">Exclusively for IITM BS Students</span>
                 </div>
               </motion.div>
 
@@ -109,13 +111,12 @@ export default function ClientHomePage() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-                className="mb-8"
+                className="mb-6"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6">
-                  <span className="block text-white/95 mb-2">Calculate Your</span>
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 animate-gradient bg-300% relative">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1] mb-4">
+                  <span className="block text-white mb-2 drop-shadow-lg">Calculate Your</span>
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 animate-gradient bg-300% drop-shadow-2xl">
                     Grades Instantly
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 opacity-20 blur-xl"></div>
                   </span>
                 </h1>
               </motion.div>
@@ -125,11 +126,11 @@ export default function ClientHomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-lg sm:text-xl text-white/70 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light"
+                className="text-xl sm:text-2xl text-white/70 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium"
               >
                 The most accurate grade calculator & predictor for IITM BS courses with{" "}
-                <span className="text-emerald-400 font-medium">course-specific formulas</span> and{" "}
-                <span className="text-cyan-400 font-medium">detailed breakdowns</span>.
+                <span className="text-emerald-400 font-bold">course-specific formulas</span> and{" "}
+                <span className="text-cyan-400 font-bold">detailed breakdowns</span>.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -137,36 +138,35 @@ export default function ClientHomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center mb-12 lg:mb-0"
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-12 lg:mb-0"
               >
-                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link href="/calculator">
                     <Button
                       size="lg"
-                      className="group relative px-8 py-6 rounded-2xl font-semibold text-base border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
+                      className="group relative px-10 py-7 rounded-2xl font-bold text-base border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-700 hover:via-emerald-600 hover:to-teal-700 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all duration-300"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="relative flex items-center gap-3">
                         <Calculator className="h-5 w-5" />
                         <span>Start Calculating</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                       </div>
                     </Button>
                   </Link>
                 </motion.div>
 
-                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+                <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link href="/predictor">
                     <Button
                       variant="outline"
                       size="lg"
-                      className="group relative px-8 py-6 rounded-2xl font-semibold text-base h-auto border-0 text-white overflow-hidden liquid-glass bg-transparent"
+                      className="group relative px-10 py-7 rounded-2xl font-bold text-base h-auto border-2 border-white/20 text-white overflow-hidden bg-white/[0.05] hover:bg-white/[0.08] backdrop-blur-xl transition-all duration-300 shadow-xl hover:border-white/30"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       <div className="relative flex items-center gap-3">
                         <Target className="h-5 w-5" />
                         <span>Try Predictor</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                       </div>
                     </Button>
                   </Link>
@@ -181,25 +181,25 @@ export default function ClientHomePage() {
               transition={{ duration: 1, delay: 0.5 }}
               className="relative hidden lg:block"
             >
-              <div className="relative z-10 bg-slate-950/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div className="relative z-10 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500">
                 {/* Mock Header */}
                 <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
                       <Calculator className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <div className="text-sm text-white/50">Course</div>
+                      <div className="text-xs text-white/40">Course</div>
                       <div className="font-semibold text-white">Python Programming</div>
                     </div>
                   </div>
-                  <div className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium border border-emerald-500/20">
+                  <div className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20">
                     Foundation
                   </div>
                 </div>
 
                 {/* Mock Sliders */}
-                <div className="space-y-6 mb-8">
+                <div className="space-y-5 mb-6">
                   {[
                     { label: "Quiz 1", value: 85, max: 100, color: "bg-violet-500" },
                     { label: "Quiz 2", value: 92, max: 100, color: "bg-blue-500" },
@@ -207,10 +207,10 @@ export default function ClientHomePage() {
                   ].map((item, i) => (
                     <div key={i} className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-white/70">{item.label}</span>
+                        <span className="text-white/60">{item.label}</span>
                         <span className="text-white font-medium">{item.value}</span>
                       </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
                         <motion.div 
                           className={`h-full ${item.color}`}
                           initial={{ width: 0 }}
@@ -223,14 +223,14 @@ export default function ClientHomePage() {
                 </div>
 
                 {/* Mock Result */}
-                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-white/60 text-sm">Projected Grade</span>
-                    <span className="text-emerald-400 font-bold text-xl">A</span>
+                <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-white/50 text-sm">Projected Grade</span>
+                    <span className="text-emerald-400 font-bold text-2xl">A</span>
                   </div>
-                  <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
                     <motion.div 
-                      className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500"
+                      className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
                       initial={{ width: 0 }}
                       animate={{ width: "85%" }}
                       transition={{ duration: 1.5, delay: 2 }}
@@ -240,22 +240,22 @@ export default function ClientHomePage() {
               </div>
 
               {/* Decorative Elements behind card */}
-              <div className="absolute -top-10 -right-10 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
-              <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -z-10 animate-pulse delay-1000"></div>
+              <div className="absolute -top-10 -right-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -z-10"></div>
+              <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="relative py-10 px-4 sm:px-6 lg:px-8">
+      <section className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             {[
               { icon: BookOpen, value: "40+", label: "Courses Supported", color: "from-emerald-500 to-teal-500" },
@@ -268,17 +268,22 @@ export default function ClientHomePage() {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
-                className="group relative p-8 rounded-3xl text-center transition-all duration-500 hover:scale-105 liquid-glass"
+                className="group relative p-10 rounded-3xl text-center transition-all duration-300 hover:scale-105"
+                style={{
+                  background: "rgba(255, 255, 255, 0.04)",
+                  backdropFilter: "blur(20px) saturate(180%)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+                }}
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative">
                   <div
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300 shadow-xl`}
                   >
                     <stat.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-3xl font-bold text-white mb-3">{stat.value}</h3>
-                  <p className="text-white/70 font-medium text-base">{stat.label}</p>
+                  <h3 className="text-4xl font-black text-white mb-3">{stat.value}</h3>
+                  <p className="text-white/70 font-semibold text-base">{stat.label}</p>
                 </div>
               </motion.div>
             ))}

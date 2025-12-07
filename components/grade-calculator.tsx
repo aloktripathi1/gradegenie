@@ -401,13 +401,12 @@ export default function GradeCalculator() {
   }
 
   return (
-    <Card className="w-full shadow-2xl bg-black border border-zinc-800 rounded-xl overflow-hidden backdrop-blur-sm">
+    <Card className="w-full shadow-2xl bg-slate-900/70 border border-white/[0.08] rounded-3xl overflow-hidden backdrop-blur-2xl">
       {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-teal-600/5 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-600/5 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-rose-600/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-500/10 to-cyan-500/5 rounded-full blur-3xl -z-10"></div>
 
-      <CardContent className="p-4 sm:p-6 space-y-8 relative">
+      <CardContent className="p-8 sm:p-10 space-y-8 relative">
         {/* Course Selection */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -416,22 +415,22 @@ export default function GradeCalculator() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           <div className="relative group">
-            <Label htmlFor="degree" className="text-zinc-400 mb-2 block flex items-center gap-2 text-sm font-medium">
-              <GraduationCap className="h-4 w-4 text-teal-400" />
+            <Label htmlFor="degree" className="text-white/70 mb-2.5 block flex items-center gap-2 text-sm font-semibold">
+              <GraduationCap className="h-4 w-4 text-emerald-400" />
               Degree Program
             </Label>
             <Select value={degree} onValueChange={setDegree}>
               <SelectTrigger
                 id="degree"
-                className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 transition-all group-hover:border-teal-500 hover:bg-zinc-800/80 h-10 rounded-lg"
+                className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white transition-all hover:border-emerald-400/60 hover:bg-white/[0.08] h-12 rounded-xl shadow-sm"
               >
                 <SelectValue placeholder="Select Degree" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800 rounded-lg">
-                <SelectItem value="data-science" className="text-zinc-300 focus:bg-teal-600 focus:text-white">
+              <SelectContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 rounded-xl shadow-2xl">
+                <SelectItem value="data-science" className="text-white focus:bg-emerald-600 focus:text-white rounded-lg">
                   Data Science
                 </SelectItem>
-                <SelectItem value="electronic-systems" className="text-zinc-300 focus:bg-teal-600 focus:text-white">
+                <SelectItem value="electronic-systems" className="text-white focus:bg-emerald-600 focus:text-white rounded-lg">
                   Electronic Systems
                 </SelectItem>
               </SelectContent>
@@ -439,25 +438,25 @@ export default function GradeCalculator() {
           </div>
 
           <div className="relative group">
-            <Label htmlFor="level" className="text-zinc-400 mb-2 block flex items-center gap-2 text-sm font-medium">
-              <BookOpen className="h-4 w-4 text-amber-400" />
+            <Label htmlFor="level" className="text-white/70 mb-2.5 block flex items-center gap-2 text-sm font-semibold">
+              <BookOpen className="h-4 w-4 text-blue-400" />
               Course Level
             </Label>
             <Select value={level} onValueChange={setLevel}>
               <SelectTrigger
                 id="level"
-                className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 transition-all group-hover:border-amber-500 hover:bg-zinc-800/80 h-10 rounded-lg"
+                className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white transition-all hover:border-blue-400/60 hover:bg-white/[0.08] h-12 rounded-xl shadow-sm"
               >
                 <SelectValue placeholder="Select Level" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800 rounded-lg">
-                <SelectItem value="foundation" className="text-zinc-300 focus:bg-amber-600 focus:text-white">
+              <SelectContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 rounded-xl shadow-2xl">
+                <SelectItem value="foundation" className="text-white focus:bg-blue-600 focus:text-white rounded-lg">
                   Foundation
                 </SelectItem>
-                <SelectItem value="diploma" className="text-zinc-300 focus:bg-amber-600 focus:text-white">
+                <SelectItem value="diploma" className="text-white focus:bg-blue-600 focus:text-white rounded-lg">
                   Diploma
                 </SelectItem>
-                <SelectItem value="degree" className="text-zinc-300 focus:bg-amber-600 focus:text-white">
+                <SelectItem value="degree" className="text-white focus:bg-blue-600 focus:text-white rounded-lg">
                   Degree
                 </SelectItem>
               </SelectContent>
@@ -465,23 +464,23 @@ export default function GradeCalculator() {
           </div>
 
           <div className="relative group sm:col-span-2 lg:col-span-1">
-            <Label htmlFor="course" className="text-zinc-400 mb-2 block flex items-center gap-2 text-sm font-medium">
-              <FileText className="h-4 w-4 text-rose-400" />
+            <Label htmlFor="course" className="text-white/70 mb-2.5 block flex items-center gap-2 text-sm font-semibold">
+              <FileText className="h-4 w-4 text-cyan-400" />
               Course Name
             </Label>
             <Select value={selectedCourse} onValueChange={setSelectedCourse}>
               <SelectTrigger
                 id="course"
-                className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 transition-all group-hover:border-rose-500 hover:bg-zinc-800/80 h-10 rounded-lg"
+                className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white transition-all hover:border-cyan-400/60 hover:bg-white/[0.08] h-12 rounded-xl shadow-sm"
               >
                 <SelectValue placeholder="Select Course" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800 max-h-[300px] rounded-lg">
+              <SelectContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 max-h-[300px] rounded-xl shadow-2xl">
                 {filteredCourses.map((course) => (
                   <SelectItem
                     key={course.id}
                     value={course.id}
-                    className="text-zinc-300 focus:bg-rose-600 focus:text-white"
+                    className="text-white focus:bg-cyan-600 focus:text-white rounded-lg"
                   >
                     {course.name}
                   </SelectItem>
@@ -500,7 +499,7 @@ export default function GradeCalculator() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <Alert variant="destructive" className="bg-red-950/30 border-red-900 text-red-200 rounded-lg">
+              <Alert variant="destructive" className="bg-red-900/20 border-red-500/30 text-red-200 rounded-lg">
                 <AlertTriangle className="h-4 w-4 text-red-400" />
                 <AlertDescription className="text-red-200">{error}</AlertDescription>
               </Alert>
@@ -516,24 +515,24 @@ export default function GradeCalculator() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="space-y-8"
+              className="space-y-6"
             >
               {/* Course Info Card */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="bg-gradient-to-br from-zinc-900/80 to-zinc-950/80 backdrop-blur-sm border border-zinc-800 rounded-xl p-4 shadow-lg"
+                className="bg-gradient-to-br from-white/[0.08] to-white/[0.04] backdrop-blur-xl border border-white/[0.15] rounded-2xl p-6 shadow-lg"
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-gradient-to-br from-teal-500 to-emerald-600 p-2 rounded-lg">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 p-2.5 rounded-xl shadow-lg shadow-emerald-500/20">
                     <Calculator className="h-5 w-5 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-zinc-200">
+                  <h3 className="text-lg font-bold text-white">
                     {courseData.find((c) => c.id === selectedCourse)?.name}
                   </h3>
                 </div>
-                <p className="text-zinc-400 text-sm">
+                <p className="text-white/70 text-sm leading-relaxed">
                   Enter your scores below to calculate your final grade. All fields are optional - leave empty for 0.
                 </p>
               </motion.div>
@@ -548,22 +547,22 @@ export default function GradeCalculator() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, delay: index * 0.05 }}
                   >
-                    <div className="flex items-center gap-1.5">
-                      <div className="p-1.5 rounded-md bg-zinc-900/80 border border-zinc-800 group-hover:border-zinc-700 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-white/[0.08] border border-white/[0.15] group-hover:border-white/25 transition-all duration-300 shadow-sm">
                         {getFieldIcon(field.id)}
                       </div>
                       <Label
                         htmlFor={field.id}
-                        className="text-zinc-400 group-hover:text-zinc-300 transition-colors flex items-center gap-2 text-sm font-medium"
+                        className="text-white/70 group-hover:text-white/90 transition-colors flex items-center gap-2 text-sm font-semibold"
                       >
                         {field.label}
                       </Label>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <HelpCircle className="h-3.5 w-3.5 text-zinc-600 cursor-help group-hover:text-zinc-500 transition-colors" />
+                            <HelpCircle className="h-3.5 w-3.5 text-white/30 cursor-help group-hover:text-white/50 transition-colors" />
                           </TooltipTrigger>
-                          <TooltipContent className="bg-zinc-900 border-zinc-800 text-zinc-300 rounded-lg">
+                          <TooltipContent className="bg-slate-900 border-white/10 text-white rounded-lg">
                             <p>
                               {field.description} (Max: {field.max})
                             </p>
@@ -581,7 +580,7 @@ export default function GradeCalculator() {
                           placeholder={`0-${field.max}`}
                           value={formValues[field.id] === null ? "" : formValues[field.id]?.toString()}
                           onChange={(e) => handleInputChange(field.id, e.target.value)}
-                          className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-blue-500 focus:border-blue-500 transition-all group-hover:border-zinc-700 hover:border-zinc-700 h-10 rounded-lg pr-8 w-24"
+                          className="bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all group-hover:border-white/20 hover:bg-white/[0.08] h-11 rounded-xl pr-8 w-28 shadow-sm font-medium"
                         />
                         <Slider
                           value={[formValues[field.id] || 0]}
@@ -590,9 +589,6 @@ export default function GradeCalculator() {
                           onValueChange={(vals) => handleInputChange(field.id, vals[0])}
                           className="flex-1"
                         />
-                      </div>
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs hidden">
-                        /{field.max}
                       </div>
                     </div>
                   </motion.div>
