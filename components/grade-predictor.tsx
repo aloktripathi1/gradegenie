@@ -770,7 +770,7 @@ export default function GradePredictor() {
                       Note: These calculations are approximations based on the course formula. The actual required
                       scores may vary slightly.
                     </p>
-                    <p>Final exam maximum score: 100 points</p>
+                    <p>Final exam maximum score: 100 marks</p>
                   </div>
                 </div>
               </motion.div>
