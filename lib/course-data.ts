@@ -112,7 +112,7 @@ export const courseData: Course[] = [
     ],
   },
 
-  // Diploma Level - Data Science (Adding a few examples)
+  // Diploma Level - Data Science
   {
     id: "mlf",
     name: "Machine Learning Foundations",
@@ -279,7 +279,7 @@ export const courseData: Course[] = [
       { id: "Qz1", label: "Quiz 1", description: "Quiz Score", max: 100 },
       { id: "OPE", label: "OPE", description: "Online Programming Exam", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "BPTA", label: "BPTA", description: "Best Practice Test Average", max: 100 },
+      { id: "BPTA", label: "BPTA", description: "Biweekly Programming Test Average", max: 100 },
     ],
   },
   {
@@ -297,7 +297,7 @@ export const courseData: Course[] = [
     ],
   },
 
-  // Degree Level - Data Science (Adding a few examples)
+  // Degree Level - Data Science
   {
     id: "st",
     name: "Software Testing",
@@ -598,7 +598,7 @@ export const courseData: Course[] = [
     ],
   },
 
-  // Add these Electronic System courses after the existing Data Science courses
+  // Add here Electronic System courses after the existing Data Science courses
 
   // Foundation Level - Electronic Systems
   {
