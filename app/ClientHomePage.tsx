@@ -113,7 +113,7 @@ export default function ClientHomePage() {
                 transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
                 className="mb-6"
               >
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1] mb-4">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.1] mb-4">
                   <span className="block text-white mb-2 drop-shadow-lg">Calculate Your</span>
                   <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 animate-gradient bg-300% drop-shadow-2xl">
                     Grades Instantly
