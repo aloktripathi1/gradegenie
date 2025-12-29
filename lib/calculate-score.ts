@@ -1,4 +1,16 @@
-export function calculateScore(courseId: string, values: Record<string, number>): number {
+// Helper function to safely get a value from the values object, defaulting to 0 if undefined
+function getValue(values: Record<string, number>, key: string): number {
+  return values[key] ?? 0
+}
+
+export function calculateScore(courseId: string, inputValues: Record<string, number>): number {
+  // Create a Proxy that returns 0 for undefined properties to prevent NaN
+  const values = new Proxy(inputValues, {
+    get(target, prop: string) {
+      return target[prop] ?? 0
+    }
+  })
+  
   switch (courseId) {
     // Foundation Level
     case "mds1":
@@ -210,7 +222,7 @@ export function calculateScore(courseId: string, values: Record<string, number>)
       )
 
     case "i4":
-      return values.A + 0.3 * values.F + 0.15 * (values.Qz1 + values.Qz2) + 0.05 * values.Game + 0.1 * values.Project
+      return getValue(values, "A") + 0.3 * getValue(values, "F") + 0.15 * (getValue(values, "Qz1") + getValue(values, "Qz2")) + 0.05 * getValue(values, "Game") + 0.1 * getValue(values, "Project")
 
     case "mt":
       return (
@@ -301,7 +313,7 @@ export function calculateScore(courseId: string, values: Record<string, number>)
 
     case "estc-lab":
     case "sensors-lab":
-      return values.Attendance * (0.5 * values.experiment + 0.5 * values.Report)
+      return getValue(values, "Attendance") * (0.5 * getValue(values, "experiment") + 0.5 * getValue(values, "Report"))
 
     case "c-prog":
       return (
@@ -312,7 +324,7 @@ export function calculateScore(courseId: string, values: Record<string, number>)
       )
 
     case "c-prog-lab":
-      return 0.5 * values.TLA + 0.5 * values.IL
+      return 0.5 * getValue(values, "TLA") + 0.5 * getValue(values, "IL")
 
     case "linux-prog":
       return (
@@ -326,11 +338,11 @@ export function calculateScore(courseId: string, values: Record<string, number>)
       )
 
     case "linux-shell-lab":
-      return 0.5 * values.OL + 0.5 * values.IL
+      return 0.5 * getValue(values, "OL") + 0.5 * getValue(values, "IL")
 
     case "electronics-lab":
     case "analog-lab":
-      return 0.4 * values.WE + 0.6 * values.ID
+      return 0.4 * getValue(values, "WE") + 0.6 * getValue(values, "ID")
 
     case "embedded-c":
     case "digital-system-design":
@@ -345,7 +357,7 @@ export function calculateScore(courseId: string, values: Record<string, number>)
 
     case "embedded-c-lab":
     case "digital-system-lab":
-      return 0.2 * values.Attendance + 0.8 * values.LabExperiment
+      return 0.2 * getValue(values, "Attendance") + 0.8 * getValue(values, "LabExperiment")
 
     // Diploma Level - Electronic Systems
     case "math-elec2":
