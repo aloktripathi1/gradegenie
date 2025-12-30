@@ -118,11 +118,7 @@ export default function AboutPageClient() {
                     As a fellow IITM BS student, I understand the challenges we face with grade calculations. That's why
                     I built GradeGenie - to save time and eliminate the guesswork from grade calculations.
                   </p>
-
-                  <p>
-                    When I'm not coding or studying, you can find me exploring new technologies, contributing to
-                    open-source projects.
-                  </p>
+                  
 
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Link href="https://github.com/aloktripathi1" target="_blank" rel="noopener noreferrer">
@@ -198,7 +194,7 @@ export default function AboutPageClient() {
         </motion.div>
 
         <footer className="mt-12 text-center text-zinc-600 text-sm">
-          Made with ❤️ by Alok Tripathi • Not affiliated with IITM
+          Made with ❤️ by Alok Tripathi • Not affiliated with IIT Madras
         </footer>
       </div>
     </div>
