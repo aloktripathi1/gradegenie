@@ -147,39 +147,23 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
       )
 
     case "dl":
-      return (
-        0.1 * values.GAA +
-        Math.max(
-          0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2,
-          0.5 * values.F + 0.3 * Math.max(values.Qz1, values.Qz2),
-        )
-      )
+      return 0.05 * values.GAA + 0.25 * values.Qz1 + 0.25 * values.Qz2 + 0.45 * values.F
 
     case "ai-search":
-      return (
-        0.1 * values.GAA +
-        Math.max(
-          0.45 * values.F + 0.35 * Math.max(values.Qz1, values.Qz2),
-          0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2,
-        )
-      )
+      return 0.1 * values.GAA + 0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2 + (values.Bonus || 0)
 
     case "llm":
-      return 0.1 * values.GAA + 0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2
+      return 0.05 * values.GAA + 0.35 * values.F + 0.3 * values.Qz1 + 0.3 * values.Qz2 + (values.Bonus || 0)
 
     // Added missing Degree Level courses
     case "spg":
       return 0.15 * values.GAA + 0.25 * values.GP + 0.25 * values.Qz2 + 0.35 * values.F
 
     case "ibd":
-      return 0.1 * values.GAA + 0.3 * values.F + 0.2 * values.OPPE1 + 0.4 * values.OPPE2
+      return 0.1 * values.GAA + 0.3 * values.F + 0.2 * values.OPPE1 + 0.4 * values.OPPE2 + (values.Bonus || 0)
 
     case "dlcv":
-      return (
-        0.1 * values.GAA +
-        0.5 * values.F +
-        Math.max(0.2 * values.Qz1 + 0.2 * values.Qz2, 0.3 * Math.max(values.Qz1, values.Qz2))
-      )
+      return 0.1 * values.GAA + 0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2
 
     case "dv":
       return (
@@ -190,7 +174,7 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
 
     case "me":
       return (
-        0.15 * values.GAA +
+        0.1 * values.GAA +
         Math.max(
           0.2 * values.Qz1 + 0.2 * values.Qz2 + 0.45 * values.F,
           0.5 * values.F + 0.25 * Math.max(values.Qz1, values.Qz2),
@@ -198,16 +182,10 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
       )
 
     case "atb":
-      return (
-        0.2 * values.GAA +
-        Math.max(
-          0.2 * values.Qz1 + 0.2 * values.Qz2 + 0.4 * values.F,
-          0.45 * values.F + 0.25 * Math.max(values.Qz1, values.Qz2),
-        )
-      )
+      return 0.075 * values.GAA + 0.025 * values.GRPa + 0.25 * values.Qz1 + 0.25 * values.Qz2 + 0.4 * values.F
 
     case "i4":
-      return getValue(values, "A") + 0.3 * getValue(values, "F") + 0.15 * (getValue(values, "Qz1") + getValue(values, "Qz2")) + 0.05 * getValue(values, "Game") + 0.1 * getValue(values, "Project")
+      return 0.15 * getValue(values, "Quizzes") + 0.05 * getValue(values, "Game") + 0.40 * getValue(values, "Best2Assignments") + 0.30 * getValue(values, "ET") + 0.10 * getValue(values, "Project")
 
     case "mt":
       return (
@@ -226,14 +204,7 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
       )
 
     case "cprog":
-      return (
-        0.05 * values.GAA +
-        0.1 * values.GAAP +
-        0.15 * values.Qz1 +
-        0.2 * values.OPPE1 +
-        0.2 * values.OPPE2 +
-        0.3 * values.F
-      )
+      return 0.10 * values.GAA + 0.20 * values.Qz1 + 0.20 * values.OPPE1 + 0.20 * values.OPPE2 + 0.30 * values.F
 
     case "ff":
       return (
@@ -252,13 +223,12 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
 
     case "dlp":
       return (
-        0.2 * values.GA +
+        0.05 * values.GAA +
         0.15 * values.Quiz1 +
         0.15 * values.Quiz2 +
         0.15 * values.Quiz3 +
-        0.2 * values.BestNPPE +
-        0.15 * values.SecondBestNPPE +
-        0.1 * values.LowestNPPE
+        0.25 * ((values.NPPE1 + values.NPPE2 + values.NPPE3) / 3) +
+        0.25 * values.Viva
       )
 
     case "os":
@@ -266,20 +236,45 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
 
     case "stml":
       return (
-        0.1 * values.GAA +
-        0.2 * values.GPA +
-        Math.max(0.2 * values.Qz1 + 0.2 * values.Qz2, 0.3 * Math.max(values.Qz1, values.Qz2)) +
-        0.3 * values.F
+        0.05 * values.GAA +
+        0.4 * values.GPA +
+        Math.max(0.15 * values.Qz1 + 0.15 * values.Qz2, 0.2 * Math.max(values.Qz1, values.Qz2)) +
+        0.25 * values.F
       )
 
     case "bdbn":
-      return (
-        0.15 * values.GAA +
-        Math.max(
-          0.2 * values.Qz1 + 0.2 * values.Qz2 + 0.45 * values.F,
-          0.5 * values.F + 0.25 * Math.max(values.Qz1, values.Qz2),
-        )
-      )
+      return 0.1 * values.GAA + 0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2
+
+    // New Degree Level courses
+    case "dsailab":
+      return 0.05 * values.GAA + 0.25 * values.Quiz + 0.4 * values.P + 0.3 * values.V + (values.Bonus || 0)
+
+    case "adlab":
+      return 0.2 * values.Quiz2 + 0.3 * values.WA + 0.5 * values.PV
+
+    case "cn":
+      return 0.1 * values.GAA + 0.30 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2 + 0.1 * values.PA
+
+    case "mr":
+      return 0.1 * values.GAA + 0.2 * values.Qz1 + 0.2 * values.Qz2 + 0.25 * values.F + 0.25 * values.P
+
+    case "sc":
+      return 0.1 * values.GAA + 0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2
+
+    case "aa":
+      return 0.1 * values.GAA + 0.35 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2
+
+    case "spt":
+      return 0.16 * values.GAA + 0.15 * values.V + 0.3 * values.F + 0.20 * values.Qz1 + 0.20 * values.Qz2
+
+    case "mlops":
+      return 0.2 * values.GAA + 0.3 * values.F + 0.25 * values.OPPE1 + 0.25 * values.OPPE2 + (values.Bonus || 0)
+
+    case "mfgai":
+      return 0.05 * values.GAA + 0.35 * values.F + 0.2 * values.Qz1 + 0.2 * values.Qz2 + 0.2 * values.NPPE
+
+    case "toc":
+      return 0.1 * values.GAA + 0.4 * values.F + 0.25 * values.Qz1 + 0.25 * values.Qz2
 
     // Foundation Level - Electronic Systems
     case "eng1-es":
