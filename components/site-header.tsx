@@ -55,6 +55,7 @@ export function SiteHeader() {
               { href: "/", label: "Home" },
               { href: "/calculator", label: "Calculator" },
               { href: "/predictor", label: "Predictor" },
+              { href: "/cgpa", label: "CGPA" },
               { href: "/about", label: "About" },
             ].map((item) => (
               <Link
@@ -123,6 +124,7 @@ export function SiteHeader() {
                     { href: "/", label: "Home" },
                     { href: "/calculator", label: "Calculator" },
                     { href: "/predictor", label: "Predictor" },
+                    { href: "/cgpa", label: "CGPA" },
                     { href: "/about", label: "About" },
                   ].map((item, index) => (
                     <motion.div
