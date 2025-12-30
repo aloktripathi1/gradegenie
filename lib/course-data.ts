@@ -43,12 +43,12 @@ export const courseData: Course[] = [
     name: "Statistics 1",
     degree: "data-science",
     level: "foundation",
-    formula: "T = max(0.6 * F + 0.3 * max(Qz1, Qz2), 0.45 * F + 0.25 * Qz1 + 0.3 * Qz2) + Extra",
+    formula: "T = max(0.6 * F + 0.3 * max(Qz1, Qz2), 0.45 * F + 0.25 * Qz1 + 0.3 * Qz2) + Bonus",
     formFields: [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "Extra", label: "Bonus", description: "Bonus Marks (max 5)", max: 5 },
+      { id: "Bonus", label: "Bonus", description: "Bonus Marks (max 5)", max: 5 },
     ],
   },
   {
@@ -56,12 +56,12 @@ export const courseData: Course[] = [
     name: "Statistics 2",
     degree: "data-science",
     level: "foundation",
-    formula: "T = max(0.6 * F + 0.3 * max(Qz1, Qz2), 0.45 * F + 0.25 * Qz1 + 0.3 * Qz2) + Extra",
+    formula: "T = max(0.6 * F + 0.3 * max(Qz1, Qz2), 0.45 * F + 0.25 * Qz1 + 0.3 * Qz2) + Bonus",
     formFields: [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "Extra", label: "Bonus", description: "Bonus Marks (max 5)", max: 5 },
+      { id: "Bonus", label: "Bonus", description: "Bonus Marks (max 5)", max: 5 },
     ],
   },
   {
@@ -69,12 +69,12 @@ export const courseData: Course[] = [
     name: "Mathematics 2",
     degree: "data-science",
     level: "foundation",
-    formula: "T = min(max(0.6 * F + 0.3 * max(Qz1, Qz2), 0.45 * F + 0.25 * Qz1 + 0.3 * Qz2) + Extra, 100)",
+    formula: "T = max(0.6 * F + 0.3 * max(Qz1, Qz2), 0.45 * F + 0.25 * Qz1 + 0.3 * Qz2) + B (capped at 100)",
     formFields: [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "Extra", label: "Bonus", description: "Bonus Marks (capped at 100 total)", max: 100 } 
+      { id: "B", label: "Bonus", description: "Bonus Marks (total capped at 100)", max: 100 },
     ],
   },
   {
@@ -150,10 +150,10 @@ export const courseData: Course[] = [
 
     degree: "data-science",
     level: "diploma",
-    formula: "T = 0.1 * GA + 0.2 * Qz2 + 0.2 * TA + 0.5 * F",
+    formula: "T = 0.3 * GA + 0.2 * Q2 + 0.2 * TA + 0.3 * F",
     formFields: [
     { id: "GA", label: "GA", description: "Graded Assignment Average", max: 100 },
-    { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
+    { id: "Q2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
     { id: "TA", label: "Timed Assignment", description: "Timed Assignment Score", max: 100 },
     { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
     ],
@@ -176,10 +176,10 @@ export const courseData: Course[] = [
     name: "Tools in Data Science",
     degree: "data-science",
     level: "diploma",
-    formula: "T = 0.1 * GAA + 0.2 * ROE + 0.2 * P1 + 0.2 * P2 + 0.3 * F",
+    formula: "T = 0.2 * GAA + 0.2 * ROE1 + 0.2 * P1 + 0.2 * P2 + 0.2 * F",
     formFields: [
       { id: "GAA", label: "GAA", description: "Graded Assignment Average", max: 100 },
-      { id: "ROE", label: "ROE", description: "Review of Evaluation", max: 100 },
+      { id: "ROE1", label: "ROE", description: "Review of Evaluation", max: 100 },
       { id: "P1", label: "Project 1", description: "First Project Score", max: 100 },
       { id: "P2", label: "Project 2", description: "Second Project Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
@@ -190,7 +190,7 @@ export const courseData: Course[] = [
     name: "Intro to DL and GenAI",
     degree: "data-science",
     level: "diploma",
-    formula: "T = 0.1 * GAA + 0.2 * Qz1 + 0.2 * Qz2 + 0.25 * F + 0.1 * NPPE1 + 0.15 * NPPE2",
+    formula: "T = 0.2 * GAA + 0.15 * Qz1 + 0.15 * Qz2 + 0.2 * F + 0.15 * NPPE1 + 0.15 * NPPE2",
     formFields: [
     { id: "GAA", label: "GAA", description: "Graded Assignment Average", max: 100 },
     { id: "Qz1", label: "Quiz 1", description: "Quiz1", max: 100 },

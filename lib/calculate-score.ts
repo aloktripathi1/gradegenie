@@ -16,66 +16,56 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
     case "mds1":
     case "eng1":
     case "ct":
+      return Math.max(
+        0.6 * values.F + 0.3 * Math.max(values.Qz1, values.Qz2),
+        0.45 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
+      )
+
     case "mds2":
       return Math.min(
-        (0.1 * values.GAA +
-          Math.max(
-            0.6 * values.F + 0.2 * Math.max(values.Qz1, values.Qz2),
-            0.4 * values.F + 0.2 * values.Qz1 + 0.3 * values.Qz2,
-          )) *
-          (1 + 0.01 * (values.Extra || 0)),
+        Math.max(
+          0.6 * values.F + 0.3 * Math.max(values.Qz1, values.Qz2),
+          0.45 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
+        ) + (values.B || 0),
         100,
       )
 
     case "eng2":
-      return (
-        0.1 * values.GAA +
-        Math.max(
-          0.6 * values.F + 0.2 * Math.max(values.Qz1, values.Qz2),
-          0.4 * values.F + 0.2 * values.Qz1 + 0.3 * values.Qz2,
-        )
+      return Math.max(
+        0.6 * values.F + 0.3 * Math.max(values.Qz1, values.Qz2),
+        0.45 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
       )
 
     case "stats1":
     case "stats2":
       return (
-        0.1 * values.GAA +
         Math.max(
-          0.6 * values.F + 0.2 * Math.max(values.Qz1, values.Qz2),
-          0.4 * values.F + 0.2 * values.Qz1 + 0.3 * values.Qz2,
-        ) +
-        (values.Extra || 0)
+          0.6 * values.F + 0.3 * Math.max(values.Qz1, values.Qz2),
+          0.45 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
+        ) + (values.Bonus || 0)
       )
 
     case "python":
       return (
-        0.1 * values.GAA1 +
-        0.1 * values.GAA2 +
-        0.1 * values.Qz1 +
+        0.15 * values.Qz1 +
         0.4 * values.F +
         0.25 * Math.max(values.PE1, values.PE2) +
-        0.15 * Math.min(values.PE1, values.PE2)
+        0.2 * Math.min(values.PE1, values.PE2)
       )
 
     // Diploma Level
     case "mlf":
+    case "mlt":
       return (
-        0.1 * values.GAA +
+        0.05 * values.GAA +
         Math.max(
-          0.6 * values.F + 0.2 * Math.max(values.Qz1, values.Qz2),
-          0.4 * values.F + 0.2 * values.Qz1 + 0.3 * values.Qz2,
+          0.6 * values.F + 0.25 * Math.max(values.Qz1, values.Qz2),
+          0.4 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
         )
       )
 
-    case "mlt":
-      return (
-        0.1 * values.GAA +
-        0.4 * values.F +
-        Math.max(0.25 * values.Qz1 + 0.25 * values.Qz2, 0.4 * Math.max(values.Qz1, values.Qz2))
-      )
-
     case "mlp":
-      return 0.1 * values.GAA + 0.3 * values.F + 0.2 * values.OPE1 + 0.2 * values.OPE2 + 0.2 * values.KA
+      return 0.1 * values.GAA + 0.3 * values.F + 0.2 * values.OPPE1 + 0.2 * values.OPPE2 + 0.2 * values.KA
 
     // Added missing Diploma Level courses
     case "bdm":
@@ -93,56 +83,51 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
     case "pds":
     case "pdsa":
       return (
-        0.1 * values.GAA +
-        0.4 * values.F +
+        0.05 * values.GAA +
         0.2 * values.OP +
-        Math.max(0.2 * Math.max(values.Qz1, values.Qz2), 0.15 * values.Qz1 + 0.15 * values.Qz2)
+        0.45 * values.F +
+        Math.max(0.2 * Math.max(values.Qz1, values.Qz2), 0.1 * values.Qz1 + 0.2 * values.Qz2)
       )
 
     case "dbms":
       return (
-        0.04 * values.GAA1 +
         0.03 * values.GAA2 +
-        0.03 * values.GAA3 +
-        0.2 * values.OP +
-        Math.max(
-          0.45 * values.F + 0.15 * Math.max(values.Qz1, values.Qz2),
-          0.4 * values.F + 0.1 * values.Qz1 + 0.2 * values.Qz2,
-        )
+        0.02 * values.GAA3 +
+        0.2 * values.OPPE +
+        0.45 * values.F +
+        Math.max(0.2 * Math.max(values.Qz1, values.Qz2), 0.1 * values.Qz1 + 0.2 * values.Qz2)
       )
 
     case "ad1":
     case "appdev-1":
       return (
-        0.15 * values.GLA +
-        0.05 * values.GA +
+        0.05 * values.GLA +
         Math.max(
-          0.35 * values.F + 0.2 * values.Qz1 + 0.25 * values.Qz2,
-          0.4 * values.F + 0.3 * Math.max(values.Qz1, values.Qz2),
+          0.6 * values.F + 0.25 * Math.max(values.Qz1, values.Qz2),
+          0.4 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
         )
       )
 
     case "java":
       return (
-        0.1 * values.GAA +
-        0.3 * values.F +
+        0.05 * values.GAA +
+        0.45 * values.F +
         0.2 * Math.max(values.PE1, values.PE2) +
         0.1 * Math.min(values.PE1, values.PE2) +
-        Math.max(0.25 * Math.max(values.Qz1, values.Qz2), 0.15 * values.Qz1 + 0.25 * values.Qz2)
+        Math.max(0.2 * Math.max(values.Qz1, values.Qz2), 0.1 * values.Qz1 + 0.2 * values.Qz2)
       )
 
     case "sys":
     case "sc":
-      return 0.1 * values.GAA + 0.2 * values.Qz1 + 0.3 * values.OPE + 0.3 * values.F + 0.1 * values.BPTA
+      return 0.05 * values.GAA + 0.25 * values.Qz1 + 0.3 * values.OPPE + 0.3 * values.F + 0.1 * values.BPTA
 
     case "ad2":
     case "appdev-2":
       return (
-        0.05 * values.GAA1 +
-        0.05 * values.GAA2 +
+        0.05 * values.GAA +
         Math.max(
-          0.35 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
-          0.5 * values.F + 0.3 * Math.max(values.Qz1, values.Qz2),
+          0.6 * values.F + 0.25 * Math.max(values.Qz1, values.Qz2),
+          0.4 * values.F + 0.25 * values.Qz1 + 0.3 * values.Qz2,
         )
       )
 
