@@ -317,8 +317,12 @@ export default function CourseGradeCalculator() {
   }
 
   return (
-    <Card className="w-full shadow-lg bg-gray-800 border-gray-700">
-      <CardContent className="p-6 space-y-6">
+    <Card className="w-full shadow-2xl bg-slate-900/70 border border-white/[0.08] rounded-3xl overflow-hidden backdrop-blur-2xl">
+      {/* Decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-500/10 to-purple-500/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-500/10 to-teal-500/5 rounded-full blur-3xl -z-10"></div>
+
+      <CardContent className="p-8 sm:p-10 space-y-8 relative">
         {/* Course Selection */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
