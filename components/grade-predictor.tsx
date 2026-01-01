@@ -501,6 +501,7 @@ export default function GradePredictor() {
                     </div>
                   </motion.div>
                 ))}
+              </div>
 
               {/* Action Buttons */}
               <motion.div
