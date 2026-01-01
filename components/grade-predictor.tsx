@@ -525,15 +525,14 @@ export default function GradePredictor() {
                     </div>
                   </motion.div>
                 ))}
-              </div>
-
-              {/* Bonus Marks */}
-              <motion.div
-                className="space-y-2 group"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
-              >
+                
+                {/* Bonus Marks */}
+                <motion.div
+                  className="space-y-2 group"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
+                >
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 rounded-lg bg-white/[0.08] border border-white/[0.15] group-hover:border-emerald-500/40 transition-all duration-300 shadow-sm">
                     <Sparkles className="h-4 w-4 text-emerald-400" />
@@ -575,7 +574,8 @@ export default function GradePredictor() {
                   onValueChange={(vals) => handleBonusChange(vals[0])}
                   className="w-full"
                 />
-              </motion.div>
+                </motion.div>
+              </div>
 
               {/* Action Buttons */}
               <motion.div
