@@ -34,6 +34,7 @@ export default function GradePredictor() {
   const [selectedCourse, setSelectedCourse] = useState<string>("")
   const [formFields, setFormFields] = useState<FormField[]>([])
   const [formValues, setFormValues] = useState<Record<string, number | null>>({})
+  const [bonusMarks, setBonusMarks] = useState<number>(0)
   const [error, setError] = useState<string | null>(null)
   const [prediction, setPrediction] = useState<{
     currentScore: number | null
@@ -58,6 +59,7 @@ export default function GradePredictor() {
     setSelectedCourse("")
     setFormFields([])
     setFormValues({})
+    setBonusMarks(0)
     setPrediction({
       currentScore: null,
       requiredScores: [],
@@ -81,6 +83,7 @@ export default function GradePredictor() {
           initialValues[field.id] = null
         })
         setFormValues(initialValues)
+        setBonusMarks(0)
         setPrediction({
           currentScore: null,
           requiredScores: [],
@@ -122,7 +125,19 @@ export default function GradePredictor() {
     })
   }
 
-
+  const handleBonusChange = (value: string | number) => {
+    const numValue = Number(value)
+    if (numValue < 0) {
+      setError("Bonus marks cannot be negative")
+      return
+    }
+    if (numValue > 5) {
+      setError("Bonus marks cannot exceed 5")
+      return
+    }
+    setError(null)
+    setBonusMarks(numValue)
+  }
 
   // Get minimum score needed for a grade
   const getMinScoreForGrade = (grade: string): number => {
@@ -193,8 +208,11 @@ export default function GradePredictor() {
         return
       }
 
-      // Calculate current score without final exam (bonus fields are already included)
-      const currentPartialScore = calculatePartialScore(course.id, calculationValues)
+      // Calculate current score without final exam
+      const currentScoreNoBonus = calculatePartialScore(course.id, calculationValues)
+      
+      // Add bonus marks to current score
+      const currentPartialScore = Math.min(currentScoreNoBonus + bonusMarks, 100)
 
       // Calculate required final exam scores for each grade
       const grades = ["S", "A", "B", "C", "D", "E"]
@@ -202,11 +220,13 @@ export default function GradePredictor() {
         const targetScore = getMinScoreForGrade(grade)
 
         // Calculate what final exam score is needed to reach this grade
+        // We need to account for the bonus already added to current score
         const requiredFinalScore = calculateRequiredFinalExamScore(
           course.id,
           calculationValues,
           targetScore,
           finalExamField.max,
+          bonusMarks,
         )
 
         // Check if it's possible to achieve this grade
@@ -224,13 +244,14 @@ export default function GradePredictor() {
       const highestPossibleGrade = requiredScores.find((score) => score.isPossible)?.grade || "F"
       let message = ""
 
-      // Calculate max possible score for display (bonus fields are already included in formula)
-      const maxPossibleTotal = calculateScore(course.id, { ...calculationValues, F: finalExamField.max })
+      // Calculate max possible score for display and add bonus
+      const maxScoreNoBonus = calculateScore(course.id, { ...calculationValues, F: finalExamField.max })
+      const maxPossibleTotal = Math.min(maxScoreNoBonus + bonusMarks, 100)
 
       if (highestPossibleGrade === "F") {
-        message = `Based on your current scores, it's not possible to achieve a passing grade (E or above). Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
+        message = `Based on your current scores${bonusMarks > 0 ? ` (including ${bonusMarks} bonus marks)` : ''}, it's not possible to achieve a passing grade (E or above). Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       } else {
-        message = `With your current scores, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
+        message = `With your current scores${bonusMarks > 0 ? ` (including ${bonusMarks} bonus marks)` : ''}, you can achieve up to a ${highestPossibleGrade} grade. Your maximum possible score is ${maxPossibleTotal.toFixed(2)}.`
       }
 
       setPrediction({
@@ -256,6 +277,7 @@ export default function GradePredictor() {
     values: Record<string, number>,
     targetScore: number,
     maxFinalScore: number,
+    bonus: number,
   ): number => {
     // Use binary search to find minimum final exam score needed
     let low = 0
@@ -265,8 +287,9 @@ export default function GradePredictor() {
     while (low <= high) {
       const mid = Math.floor((low + high) / 2)
       
-      // Calculate total score with this final exam score (bonus fields already included in formula)
-      const totalScore = calculateScore(courseId, { ...values, F: mid })
+      // Calculate total score with this final exam score, then add bonus
+      const scoreWithoutBonus = calculateScore(courseId, { ...values, F: mid })
+      const totalScore = Math.min(scoreWithoutBonus + bonus, 100)
       
       if (totalScore >= targetScore) {
         result = mid
@@ -286,6 +309,7 @@ export default function GradePredictor() {
       initialValues[field.id] = null
     })
     setFormValues(initialValues)
+    setBonusMarks(0)
     setPrediction({
       currentScore: null,
       requiredScores: [],
@@ -502,6 +526,56 @@ export default function GradePredictor() {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Bonus Marks */}
+              <motion.div
+                className="space-y-2 group"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-white/[0.08] border border-white/[0.15] group-hover:border-emerald-500/40 transition-all duration-300 shadow-sm">
+                    <Sparkles className="h-4 w-4 text-emerald-400" />
+                  </div>
+                  <Label htmlFor="bonus" className="text-sm font-semibold text-white">
+                    Bonus Marks
+                  </Label>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="h-3.5 w-3.5 text-zinc-500 hover:text-zinc-300 transition-colors" />
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <p className="text-xs">Additional bonus marks (0-5) that will be added to your total score</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="bonus"
+                    type="number"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    value={bonusMarks}
+                    onChange={(e) => handleBonusChange(e.target.value)}
+                    className="h-11 bg-white/[0.06] backdrop-blur-sm border-white/[0.12] text-white pr-16 rounded-xl focus:border-emerald-500/50 focus:ring-emerald-500/30 transition-all shadow-sm font-medium"
+                    placeholder="0"
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 text-xs font-medium">
+                    /5
+                  </div>
+                </div>
+                <Slider
+                  value={[bonusMarks]}
+                  max={5}
+                  step={0.1}
+                  onValueChange={(vals) => handleBonusChange(vals[0])}
+                  className="w-full"
+                />
+              </motion.div>
 
               {/* Action Buttons */}
               <motion.div

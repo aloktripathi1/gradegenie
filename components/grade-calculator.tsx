@@ -53,6 +53,7 @@ export default function GradeCalculator() {
     formulaBreakdown: null,
     componentScores: null,
   })
+  const [bonusMarks, setBonusMarks] = useState<number>(0)
   const [error, setError] = useState<string | null>(null)
 
   // Filter courses based on selected degree and level
@@ -63,6 +64,7 @@ export default function GradeCalculator() {
     setSelectedCourse("")
     setFormFields([])
     setFormValues({})
+    setBonusMarks(0)
     setResult({
       score: null,
       grade: null,
@@ -85,6 +87,7 @@ export default function GradeCalculator() {
           initialValues[field.id] = null
         })
         setFormValues(initialValues)
+        setBonusMarks(0)
         setResult({
           score: null,
           grade: null,
@@ -128,7 +131,19 @@ export default function GradeCalculator() {
     })
   }
 
-
+  const handleBonusChange = (value: string | number) => {
+    const numValue = Number(value)
+    if (numValue < 0) {
+      setError("Bonus marks cannot be negative")
+      return
+    }
+    if (numValue > 5) {
+      setError("Bonus marks cannot exceed 5")
+      return
+    }
+    setError(null)
+    setBonusMarks(numValue)
+  }
 
   const calculateGrade = () => {
     // Convert null values to 0 for calculation
@@ -152,20 +167,23 @@ export default function GradeCalculator() {
     if (!course) return
 
     try {
-      // Calculate score using the formula (bonus fields are already included)
-      const finalScore = calculateScore(course.id, calculationValues)
+      // Calculate the final score using the formula
+      const scoreWithoutBonus = calculateScore(course.id, calculationValues)
+      
+      // Add bonus marks to the score
+      const score = Math.min(scoreWithoutBonus + bonusMarks, 100)
 
-      // Assign grade
-      const grade = assignGrade(finalScore)
+      // Determine grade based on final score (with bonus)
+      const grade = assignGrade(score)
 
       // Generate formula breakdown
-      const formulaBreakdown = generateFormulaBreakdown(course.id, calculationValues, finalScore)
+      const formulaBreakdown = generateFormulaBreakdown(course.id, calculationValues, scoreWithoutBonus, bonusMarks)
 
       // Generate component scores for visual breakdown
-      const componentScores = generateComponentScores(course, calculationValues, finalScore)
+      const componentScores = generateComponentScores(course, calculationValues, scoreWithoutBonus, bonusMarks)
 
       setResult({
-        score: finalScore,
+        score: score,
         grade: grade,
         formula: course.formula,
         formulaBreakdown: formulaBreakdown,
@@ -179,7 +197,8 @@ export default function GradeCalculator() {
   const generateFormulaBreakdown = (
     courseId: string,
     values: Record<string, number>,
-    finalScore: number,
+    scoreWithoutBonus: number,
+    bonus: number,
   ): string => {
     const course = courseData.find((c) => c.id === courseId)
     if (!course) return ""
@@ -192,7 +211,15 @@ export default function GradeCalculator() {
       breakdown += `${field.label} (${field.id}) = ${values[field.id]}\n`
     }
 
-    breakdown += `\nFinal Score (T) = ${finalScore.toFixed(2)}\n`
+    breakdown += `\nScore from Formula: ${scoreWithoutBonus.toFixed(2)}`
+    
+    if (bonus > 0) {
+      const finalScore = Math.min(scoreWithoutBonus + bonus, 100)
+      breakdown += `\nBonus: +${bonus}`
+      breakdown += `\nFinal Score (T) = ${scoreWithoutBonus.toFixed(2)} + ${bonus} = ${finalScore.toFixed(2)}`
+    } else {
+      breakdown += `\nFinal Score (T) = ${scoreWithoutBonus.toFixed(2)}`
+    }
 
     return breakdown
   }
@@ -277,6 +304,7 @@ export default function GradeCalculator() {
       initialValues[field.id] = null
     })
     setFormValues(initialValues)
+    setBonusMarks(0)
     setResult({
       score: null,
       grade: null,
@@ -518,6 +546,56 @@ export default function GradeCalculator() {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Bonus Marks */}
+              <motion.div
+                className="space-y-2 group"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-zinc-900/80 border border-zinc-800 group-hover:border-emerald-500/40 transition-all duration-300">
+                    <Sparkles className="h-4 w-4 text-emerald-400" />
+                  </div>
+                  <Label htmlFor="bonus" className="text-sm font-semibold text-zinc-200">
+                    Bonus Marks
+                  </Label>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="h-3.5 w-3.5 text-zinc-500 hover:text-zinc-300 transition-colors" />
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <p className="text-xs">Additional bonus marks (0-5) that will be added to your total score</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="bonus"
+                    type="number"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    value={bonusMarks}
+                    onChange={(e) => handleBonusChange(e.target.value)}
+                    className="h-11 bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-100 pr-16 rounded-lg focus:border-emerald-500/50 focus:ring-emerald-500/30 transition-all"
+                    placeholder="0"
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-medium">
+                    /5
+                  </div>
+                </div>
+                <Slider
+                  value={[bonusMarks]}
+                  max={5}
+                  step={0.1}
+                  onValueChange={(vals) => handleBonusChange(vals[0])}
+                  className="w-full"
+                />
+              </motion.div>
 
               {/* Action Buttons */}
               <motion.div
