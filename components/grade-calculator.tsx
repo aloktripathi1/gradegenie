@@ -40,21 +40,16 @@ export default function GradeCalculator() {
   const [selectedCourse, setSelectedCourse] = useState<string>("")
   const [formFields, setFormFields] = useState<FormField[]>([])
   const [formValues, setFormValues] = useState<Record<string, number | null>>({})
-  const [bonusMarks, setBonusMarks] = useState<number | null>(null)
   const [result, setResult] = useState<{
     score: number | null
-    finalScore: number | null
     grade: string | null
     formula: string | null
-    bonusApplied: boolean
     formulaBreakdown: string | null
     componentScores: Record<string, { value: number; weight: number; contribution: number }> | null
   }>({
     score: null,
-    finalScore: null,
     grade: null,
     formula: null,
-    bonusApplied: false,
     formulaBreakdown: null,
     componentScores: null,
   })
@@ -68,13 +63,10 @@ export default function GradeCalculator() {
     setSelectedCourse("")
     setFormFields([])
     setFormValues({})
-    setBonusMarks(null)
     setResult({
       score: null,
-      finalScore: null,
       grade: null,
       formula: null,
-      bonusApplied: false,
       formulaBreakdown: null,
       componentScores: null,
     })
@@ -95,14 +87,11 @@ export default function GradeCalculator() {
         setFormValues(initialValues)
         setResult({
           score: null,
-          finalScore: null,
           grade: null,
           formula: course.formula,
-          bonusApplied: false,
           formulaBreakdown: null,
           componentScores: null,
         })
-        setBonusMarks(null)
       }
     }
   }, [selectedCourse])
@@ -139,29 +128,7 @@ export default function GradeCalculator() {
     })
   }
 
-  const handleBonusChange = (value: string) => {
-    // If the input is empty, set to null
-    if (value === "") {
-      setBonusMarks(null)
-      return
-    }
 
-    const numValue = Number(value)
-
-    // Validate bonus input
-    if (numValue < 0) {
-      setError("Bonus marks cannot be negative")
-      return
-    }
-
-    if (numValue > 5) {
-      setError("Bonus marks cannot exceed 5")
-      return
-    }
-
-    setError(null)
-    setBonusMarks(numValue)
-  }
 
   const calculateGrade = () => {
     // Convert null values to 0 for calculation
@@ -185,46 +152,22 @@ export default function GradeCalculator() {
     if (!course) return
 
     try {
-      // Calculate score without bonus
-      const initialScore = calculateScore(course.id, calculationValues)
-
-      // Determine if bonus should be applied (only if score is ≥ 40)
-      const bonusApplied = initialScore >= 40
-
-      // Calculate final score with bonus if applicable
-      let finalScore = initialScore
-      const bonusValue = bonusMarks ?? 0
-      if (bonusApplied && bonusValue > 0) {
-        finalScore = Math.min(100, initialScore + bonusValue)
-      }
+      // Calculate score using the formula (bonus fields are already included)
+      const finalScore = calculateScore(course.id, calculationValues)
 
       // Assign grade
       const grade = assignGrade(finalScore)
 
       // Generate formula breakdown
-      const formulaBreakdown = generateFormulaBreakdown(
-        course.id,
-        calculationValues,
-        initialScore,
-        finalScore,
-        bonusApplied,
-        bonusValue,
-      )
+      const formulaBreakdown = generateFormulaBreakdown(course.id, calculationValues, finalScore)
 
       // Generate component scores for visual breakdown
-      const componentScores = generateComponentScores(
-        course,
-        calculationValues,
-        initialScore,
-        bonusApplied ? bonusValue : 0,
-      )
+      const componentScores = generateComponentScores(course, calculationValues, finalScore)
 
       setResult({
-        score: initialScore,
-        finalScore: finalScore,
+        score: finalScore,
         grade: grade,
         formula: course.formula,
-        bonusApplied: bonusApplied && bonusValue > 0,
         formulaBreakdown: formulaBreakdown,
         componentScores: componentScores,
       })
@@ -236,10 +179,7 @@ export default function GradeCalculator() {
   const generateFormulaBreakdown = (
     courseId: string,
     values: Record<string, number>,
-    initialScore: number,
     finalScore: number,
-    bonusApplied: boolean,
-    bonus: number,
   ): string => {
     const course = courseData.find((c) => c.id === courseId)
     if (!course) return ""
@@ -252,20 +192,7 @@ export default function GradeCalculator() {
       breakdown += `${field.label} (${field.id}) = ${values[field.id]}\n`
     }
 
-    breakdown += `\nInitial Score (T) = ${initialScore.toFixed(2)}\n`
-
-    if (bonus > 0) {
-      breakdown += `Bonus Marks = ${bonus}\n`
-      if (bonusApplied) {
-        breakdown += `Bonus Applied: Yes (T ≥ 40)\n`
-        breakdown += `Final Score = ${initialScore.toFixed(2)} + ${bonus} = ${finalScore.toFixed(2)}\n`
-      } else {
-        breakdown += `Bonus Applied: No (T < 40)\n`
-        breakdown += `Final Score = ${initialScore.toFixed(2)}\n`
-      }
-    } else {
-      breakdown += `Final Score = ${initialScore.toFixed(2)}\n`
-    }
+    breakdown += `\nFinal Score (T) = ${finalScore.toFixed(2)}\n`
 
     return breakdown
   }
@@ -350,13 +277,10 @@ export default function GradeCalculator() {
       initialValues[field.id] = null
     })
     setFormValues(initialValues)
-    setBonusMarks(null)
     setResult({
       score: null,
-      finalScore: null,
       grade: null,
-      formula: result.formula,
-      bonusApplied: false,
+      formula: null,
       formulaBreakdown: null,
       componentScores: null,
     })
@@ -593,49 +517,6 @@ export default function GradeCalculator() {
                     </div>
                   </motion.div>
                 ))}
-
-                {/* Bonus Marks */}
-                <motion.div
-                  className="space-y-2 group"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, delay: formFields.length * 0.05 }}
-                >
-                  <div className="flex items-center gap-1.5">
-                    <div className="p-1.5 rounded-md bg-zinc-900/80 border border-zinc-800 group-hover:border-green-800 transition-colors">
-                      <Sparkles className="h-4 w-4 text-green-400" />
-                    </div>
-                    <Label
-                      htmlFor="bonus"
-                      className="text-zinc-400 group-hover:text-green-400 transition-colors flex items-center gap-2 text-sm font-medium"
-                    >
-                      Bonus Marks
-                    </Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <HelpCircle className="h-3.5 w-3.5 text-zinc-600 cursor-help group-hover:text-green-600 transition-colors" />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-zinc-900 border-zinc-800 text-zinc-300 rounded-lg">
-                          <p>Bonus marks (out of 5) are applied only if your total score is ≥ 40</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  <div className="relative">
-                    <Input
-                      id="bonus"
-                      type="number"
-                      min="0"
-                      max="5"
-                      placeholder="0-5"
-                      value={bonusMarks === null ? "" : bonusMarks.toString()}
-                      onChange={(e) => handleBonusChange(e.target.value)}
-                      className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 text-zinc-300 placeholder:text-zinc-600 focus:ring-green-500 focus:border-green-500 transition-all group-hover:border-green-800 hover:border-zinc-700 h-10 rounded-lg pr-8"
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 text-xs">/5</div>
-                  </div>
-                </motion.div>
               </div>
 
               {/* Action Buttons */}
@@ -711,18 +592,8 @@ export default function GradeCalculator() {
                       </p>
                       <div className="flex items-center justify-center gap-3">
                         <p className="text-3xl sm:text-4xl font-semibold text-zinc-200">
-                          {result.finalScore?.toFixed(2)}
+                          {result.score?.toFixed(2)}
                         </p>
-                        {result.bonusApplied && (
-                          <span className="text-xs px-2.5 py-1.5 rounded-full bg-green-900/30 text-green-400 border border-green-900 flex items-center gap-1.5 shadow-lg">
-                            <Sparkles className="h-3 w-3" /> +{bonusMarks} Bonus
-                          </span>
-                        )}
-                        {!result.bonusApplied && result.score && result.score < 40 && bonusMarks && bonusMarks > 0 && (
-                          <span className="text-xs px-2.5 py-1.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700 flex items-center gap-1.5">
-                            <AlertTriangle className="h-3 w-3" /> Bonus not applied (score &lt; 40)
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -735,7 +606,7 @@ export default function GradeCalculator() {
                       <span className="text-xs text-zinc-500">Excellent</span>
                     </div>
                     <Progress 
-                      value={Math.min(((result.finalScore || 0) / 100) * 100, 100)} 
+                      value={Math.min(((result.score || 0) / 100) * 100, 100)} 
                       className="h-3 bg-zinc-800" 
                       indicatorClassName="bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
                     />
@@ -757,7 +628,7 @@ export default function GradeCalculator() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.3 }}
                 >
-                  <ScoreBreakdown componentScores={result.componentScores} totalScore={result.finalScore || 0} />
+                  <ScoreBreakdown componentScores={result.componentScores} totalScore={result.score || 0} />
                 </motion.div>
               )}
 
