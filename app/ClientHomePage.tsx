@@ -113,9 +113,9 @@ export default function ClientHomePage() {
                 transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
                 className="mb-6"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.1] mb-4">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.1] mb-4" style={{ fontFamily: "'Instrument Serif', serif" }}>
                   <span className="block text-white mb-2 drop-shadow-lg">Calculate Your</span>
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 animate-gradient bg-300% drop-shadow-2xl">
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 animate-gradient bg-300% drop-shadow-2xl italic">
                     Grades Instantly
                   </span>
                 </h1>
@@ -127,6 +127,7 @@ export default function ClientHomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-xl sm:text-2xl text-white/70 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium"
+                style={{ fontFamily: "'Instrument Serif', serif" }}
               >
                 The most accurate grade calculator & predictor for IITM BS courses with{" "}
                 <span className="text-emerald-400 font-bold">course-specific formulas</span> and{" "}
