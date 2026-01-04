@@ -145,7 +145,7 @@ export default function ClientHomePage() {
                   <Link href="/calculator">
                     <Button
                       size="lg"
-                      className="group relative px-10 py-7 rounded-2xl font-bold text-base border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-700 hover:via-emerald-600 hover:to-teal-700 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all duration-300"
+                      className="group relative px-8 py-5rounded-2xl font-bold text-base border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-700 hover:via-emerald-600 hover:to-teal-700 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all duration-300"
                     >
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="relative flex items-center gap-3">
@@ -162,7 +162,7 @@ export default function ClientHomePage() {
                     <Button
                       variant="outline"
                       size="lg"
-                      className="group relative px-10 py-7 rounded-2xl font-bold text-base h-auto border-2 border-white/20 text-white overflow-hidden bg-white/[0.05] hover:bg-white/[0.08] backdrop-blur-xl transition-all duration-300 shadow-xl hover:border-white/30"
+                      className="group relative px-8 py-5rounded-2xl font-bold text-base h-auto border-2 border-white/20 text-white overflow-hidden bg-white/[0.05] hover:bg-white/[0.08] backdrop-blur-xl transition-all duration-300 shadow-xl hover:border-white/30"
                     >
                       <div className="relative flex items-center gap-3">
                         <Target className="h-5 w-5" />
