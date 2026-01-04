@@ -68,15 +68,12 @@ export default function ClientHomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white overflow-hidden">
-      {/* Animated Background Elements */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
+      {/* Aesthetic Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-gradient-to-r from-emerald-500/8 to-teal-500/8 rounded-full blur-3xl animate-pulse opacity-60"></div>
-        <div
-          className="absolute bottom-1/4 right-1/4 w-[32rem] h-[32rem] bg-gradient-to-r from-blue-500/8 to-cyan-500/8 rounded-full blur-3xl animate-pulse opacity-60"
-          style={{ animationDelay: "2s" }}
-        ></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.05),transparent_50%)]" />
+        <div className="absolute top-1/4 -right-48 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 -left-48 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-2/3 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
       </div>
 
       <SiteHeader />
@@ -88,35 +85,26 @@ export default function ClientHomePage() {
             <div className="text-center lg:text-left">
               {/* Floating Badge */}
               <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="inline-flex items-center gap-3 px-5 py-3 rounded-full mb-8 relative group"
-                style={{
-                  background: "rgba(255, 255, 255, 0.04)",
-                  backdropFilter: "blur(20px) saturate(180%)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
-                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full mb-8 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 backdrop-blur-xl"
               >
-                <div className="relative flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50"></div>
-                  <Sparkles className="h-4 w-4 text-emerald-400" />
-                  <span className="text-white font-semibold text-sm">Exclusively for IITM BS Students</span>
-                </div>
+                <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="text-emerald-100 text-sm font-medium tracking-wide">Built for IITM BS Students</span>
               </motion.div>
 
               {/* Main Heading */}
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+                transition={{ duration: 0.8, delay: 0.1 }}
                 className="mb-6"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.1] mb-4" style={{ fontFamily: "'Instrument Serif', serif" }}>
-                  <span className="block text-white mb-2 drop-shadow-lg">Calculate Your</span>
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 animate-gradient bg-300% drop-shadow-2xl italic">
-                    Grades Instantly
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] tracking-tight">
+                  <span className="block text-white">Your Academic</span>
+                  <span className="block mt-2 font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400">
+                    Grade Calculator
                   </span>
                 </h1>
               </motion.div>
@@ -125,33 +113,29 @@ export default function ClientHomePage() {
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-xl sm:text-2xl text-white/70 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium"
-                style={{ fontFamily: "'Instrument Serif', serif" }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-xl text-slate-400 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed"
               >
-                The most accurate grade calculator & predictor for IITM BS courses with{" "}
-                <span className="text-emerald-400 font-bold">course-specific formulas</span> and{" "}
-                <span className="text-cyan-400 font-bold">detailed breakdowns</span>.
+                Precision-engineered grade calculations with course-specific formulas. Get instant predictions and comprehensive breakdowns.
               </motion.p>
 
               {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-12 lg:mb-0"
               >
                 <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link href="/calculator">
                     <Button
                       size="lg"
-                      className="group relative px-9 py-6 rounded-2xl font-bold text-base border-0 h-auto overflow-hidden bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-700 hover:via-emerald-600 hover:to-teal-700 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all duration-300"
+                      className="group relative px-8 py-6 rounded-2xl font-medium text-base border-0 h-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="relative flex items-center gap-3">
-                        <Calculator className="h-5 w-5" />
+                      <div className="flex items-center gap-2.5">
+                        <Calculator className="h-4.5 w-4.5" />
                         <span>Start Calculating</span>
-                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                        <ArrowRight className="h-4.5 w-4.5 group-hover:translate-x-1 transition-transform duration-300" />
                       </div>
                     </Button>
                   </Link>
@@ -162,12 +146,12 @@ export default function ClientHomePage() {
                     <Button
                       variant="outline"
                       size="lg"
-                      className="group relative px-9 py-6 rounded-2xl font-bold text-base h-auto border-2 border-white/20 text-white overflow-hidden bg-white/[0.05] hover:bg-white/[0.08] backdrop-blur-xl transition-all duration-300 shadow-xl hover:border-white/30"
+                      className="group relative px-8 py-6 rounded-2xl font-medium text-base h-auto border-2 border-white/15 text-white hover:border-white/30 hover:bg-white/5 backdrop-blur-sm transition-all duration-300"
                     >
-                      <div className="relative flex items-center gap-3">
-                        <Target className="h-5 w-5" />
+                      <div className="flex items-center gap-2.5">
+                        <Target className="h-4.5 w-4.5" />
                         <span>Try Predictor</span>
-                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                        <ArrowRight className="h-4.5 w-4.5 group-hover:translate-x-1 transition-transform duration-300" />
                       </div>
                     </Button>
                   </Link>
@@ -249,43 +233,33 @@ export default function ClientHomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="relative py-16 px-4 sm:px-6 lg:px-8">
+      <section className="relative py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            transition={{ duration: 0.8 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             {[
-              { icon: BookOpen, value: "40+", label: "Courses Supported", color: "from-emerald-500 to-teal-500" },
-              { icon: Users, value: "1000+", label: "Students Helped", color: "from-cyan-500 to-blue-500" },
-              { icon: Award, value: "100%", label: "Accurate Formulas", color: "from-blue-500 to-indigo-500" },
+              { icon: BookOpen, value: "40+", label: "Courses Supported" },
+              { icon: Users, value: "1000+", label: "Students Helped" },
+              { icon: Award, value: "100%", label: "Accurate Formulas" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className="group relative p-10 rounded-3xl text-center transition-all duration-300 hover:scale-105"
-                style={{
-                  background: "rgba(255, 255, 255, 0.04)",
-                  backdropFilter: "blur(20px) saturate(180%)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
-                }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="text-center p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/[0.07] transition-all duration-300"
               >
-                <div className="relative">
-                  <div
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300 shadow-xl`}
-                  >
-                    <stat.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-4xl font-black text-white mb-3">{stat.value}</h3>
-                  <p className="text-white/70 font-semibold text-base">{stat.label}</p>
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-emerald-500/10 mb-5">
+                  <stat.icon className="h-7 w-7 text-emerald-400" />
                 </div>
+                <h3 className="text-4xl font-semibold text-white mb-2\">{stat.value}</h3>
+                <p className="text-slate-400 text-sm font-medium">{stat.label}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -298,39 +272,38 @@ export default function ClientHomePage() {
           {/* Section Header */}
           <div className="text-center mb-20">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 liquid-glass"
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-8 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 backdrop-blur-xl"
             >
-              <Star className="h-4 w-4 text-yellow-400" />
-              <span className="text-white/80 text-xs font-medium">Premium Features</span>
+              <Star className="h-4 w-4 text-emerald-400" />
+              <span className="text-emerald-100 text-sm font-medium">Premium Features</span>
             </motion.div>
 
             <motion.h2
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-4xl sm:text-5xl font-bold text-white mb-8"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-medium text-white mb-6 tracking-tight"
             >
               Why Choose{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+              <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
                 GradeGenie
               </span>
               ?
             </motion.h2>
 
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-lg text-white/70 max-w-3xl mx-auto leading-relaxed"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
             >
-              Built specifically for IITM BS students with precision, elegance, and comprehensive features that make
-              grade calculation effortless.
+              Built specifically for IITM BS students with precision, elegance, and comprehensive features.
             </motion.p>
           </div>
 

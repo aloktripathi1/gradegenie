@@ -21,7 +21,7 @@ const config = {
     extend: {
       fontFamily: {
         sans: [
-          "Plus Jakarta Sans",
+          "Space Grotesk",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
@@ -30,7 +30,8 @@ const config = {
           "Arial",
           "sans-serif",
         ],
-        jakarta: ["Plus Jakarta Sans", "sans-serif"],
+        display: ["Space Grotesk", "sans-serif"],
+        serif: ["Instrument Serif", "Georgia", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
