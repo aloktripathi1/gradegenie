@@ -32,6 +32,16 @@ const config = {
         ],
         display: ["Space Grotesk", "sans-serif"],
         serif: ["Instrument Serif", "Georgia", "serif"],
+        system: [
+          "Plus Jakarta Sans",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export default function AboutPageClient() {
   return (
-    <div className="min-h-screen bg-black py-6 px-3 sm:px-6 lg:px-8 text-zinc-100">
+    <div className="min-h-screen bg-black py-6 px-3 sm:px-6 lg:px-8 text-zinc-100 font-system">
       <div className="max-w-4xl mx-auto pt-16">
         {/* Header */}
         <div className="text-center mb-12">
