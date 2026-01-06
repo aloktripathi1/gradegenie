@@ -1,4 +1,4 @@
-import ClientHomePage from "./ClientHomePage"
+import ClientHomePage from "./homepage"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
