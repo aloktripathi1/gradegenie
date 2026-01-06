@@ -154,9 +154,6 @@ export default function NotesPageClient() {
                   className="mt-6 p-6 bg-zinc-800/50 rounded-lg border border-zinc-700"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="bg-gradient-to-r from-teal-500 to-emerald-600 p-2 rounded-lg">
-                      <FileText className="h-6 w-6 text-white" />
-                    </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-white mb-2">{selectedCourse.name}</h3>
                       <p className="text-zinc-400 mb-4">
