@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { BookOpen, FileText, ExternalLink, Download } from "lucide-react"
 import { motion } from "framer-motion"
-import { courseData, type Course } from "@/lib/course-data"
+import { courseData } from "@/lib/course-data"
+import { type Course } from "@/lib/types"
 import { notesData } from "@/lib/notes-data"
 
 export default function NotesPageClient() {
