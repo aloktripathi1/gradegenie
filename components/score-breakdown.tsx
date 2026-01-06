@@ -84,7 +84,7 @@ export function ScoreBreakdown({ componentScores, totalScore }: ScoreBreakdownPr
                     <div className={`p-1.5 rounded-md bg-zinc-900 border border-zinc-800 ${iconColor.border}`}>
                       <span className={`${iconColor.text}`}>{getComponentIcon(componentId)}</span>
                     </div>
-                    <span className="text-zinc-400 font-medium group-hover:text-blue-400 transition-colors">
+                    <span className="text-zinc-400 font-medium group-hover:text-cyan-400 transition-colors">
                       {componentLabels[componentId] || componentId}
                     </span>
                     <TooltipProvider>
@@ -163,10 +163,10 @@ function getIconColor(componentId: string): { text: string; border: string } {
   if (componentId === "Bonus") return { text: "text-green-400", border: "border-green-900" }
 
   // Final exam is blue
-  if (componentId === "F") return { text: "text-blue-400", border: "border-blue-900" }
+  if (componentId === "F") return { text: "text-cyan-400", border: "border-cyan-900" }
 
-  // Quizzes are purple
-  if (componentId.includes("Qz")) return { text: "text-violet-400", border: "border-violet-900" }
+  // Quizzes are slate
+  if (componentId.includes("Qz")) return { text: "text-slate-400", border: "border-slate-900" }
 
   // Programming exams are teal
   if (componentId.includes("PE") || componentId.includes("OPPE"))

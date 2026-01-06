@@ -55,7 +55,7 @@ export default function ClientHomePage() {
   // Don't render until mounted
   if (!isMounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 text-white">
         <SiteHeader />
         <div className="flex items-center justify-center min-h-screen">
           <div className="relative">
@@ -319,8 +319,8 @@ export default function ClientHomePage() {
               <TabsList className="grid grid-cols-3 w-full mb-16 p-2 h-auto rounded-3xl border-0 liquid-glass">
                 {[
                   { value: "accuracy", icon: Gauge, label: "Accuracy", gradient: "from-emerald-500 to-teal-500" },
-                  { value: "coverage", icon: Layers, label: "Coverage", gradient: "from-cyan-500 to-blue-500" },
-                  { value: "insights", icon: PieChart, label: "Insights", gradient: "from-blue-500 to-indigo-500" },
+                  { value: "coverage", icon: Layers, label: "Coverage", gradient: "from-cyan-500 to-teal-500" },
+                  { value: "insights", icon: PieChart, label: "Insights", gradient: "from-slate-500 to-cyan-500" },
                 ].map((tab) => (
                   <TabsTrigger
                     key={tab.value}
@@ -356,7 +356,7 @@ export default function ClientHomePage() {
                     icon={<Sparkles className="h-7 w-7 text-white" />}
                     title="Smart Bonus Calculation"
                     description="Intelligent bonus mark application that automatically determines eligibility and caps scores appropriately."
-                    gradient="from-cyan-500 to-blue-500"
+                    gradient="from-cyan-500 to-teal-500"
                   />
                 </motion.div>
               </TabsContent>
@@ -372,13 +372,13 @@ export default function ClientHomePage() {
                     icon={<BookOpen className="h-7 w-7 text-white" />}
                     title="All Degrees & Levels"
                     description="Complete support for Data Science and Electronic Systems programs across Foundation, Diploma, and Degree levels."
-                    gradient="from-blue-500 to-indigo-500"
+                    gradient="from-slate-500 to-cyan-500"
                   />
                   <LiquidFeatureCard
                     icon={<FileText className="h-7 w-7 text-white" />}
                     title="Comprehensive Course Database"
                     description="Extensive database covering all courses with their unique grading patterns and assessment structures."
-                    gradient="from-indigo-500 to-purple-500"
+                    gradient="from-cyan-500 to-teal-500"
                   />
                 </motion.div>
               </TabsContent>
@@ -432,7 +432,7 @@ export default function ClientHomePage() {
                 icon: Clock,
                 title: "Always Available",
                 description: "24/7 access with no downtime - calculate grades whenever you need",
-                color: "from-blue-500 to-indigo-500",
+                color: "from-slate-500 to-cyan-500",
               },
             ].map((feature, index) => (
               <motion.div

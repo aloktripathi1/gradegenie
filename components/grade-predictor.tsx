@@ -165,9 +165,9 @@ export default function GradePredictor() {
       case "S":
         return "from-emerald-400 to-teal-500"
       case "A":
-        return "from-blue-400 to-indigo-500"
-      case "B":
-        return "from-violet-400 to-purple-500"
+        return "from-cyan-400 to-teal-500"
+      case "C":
+        return "from-slate-400 to-cyan-500"
       case "C":
         return "from-yellow-400 to-amber-500"
       case "D":

@@ -52,7 +52,7 @@ export default function AboutPageClient() {
           <Card className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-xl">
             <CardContent className="p-6 sm:p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-lg">
+                <div className="bg-gradient-to-br from-slate-500 to-cyan-600 p-2 rounded-lg">
                   <Calculator className="h-6 w-6 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-zinc-200">The Project</h2>
