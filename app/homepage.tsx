@@ -101,7 +101,7 @@ export default function ClientHomePage() {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="mb-6"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] tracking-tight">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] tracking-tight">
                   <span className="block text-white">Your Academic</span>
                   <span className="block mt-2 font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400">
                     Grade Calculator
