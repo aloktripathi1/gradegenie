@@ -228,7 +228,7 @@ export default function NotesPageClient() {
                   className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-medium px-8 py-6 rounded-xl shadow-lg"
                 >
                   <a 
-                    href="YOUR_GOOGLE_FORM_LINK_HERE" 
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSdOLNQ3gn4542gZ_e4OTqg2BtMfzipf3JFEF6owkcSr--thOA/viewform?usp=publish-editor" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
