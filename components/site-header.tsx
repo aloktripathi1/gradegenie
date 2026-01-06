@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { GraduationCap, Menu, X } from "lucide-react"
+import { GraduationCap, Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -10,6 +10,10 @@ export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false)
+  const [pyqsDropdownOpen, setPyqsDropdownOpen] = useState(false)
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false)
+  const [mobilePyqsOpen, setMobilePyqsOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -51,22 +55,113 @@ export function SiteHeader() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {[
-              { href: "/", label: "Home" },
-              { href: "/calculator", label: "Calculator" },
-              { href: "/predictor", label: "Predictor" },
-              { href: "/cgpa", label: "CGPA" },
-              { href: "/about", label: "About" },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group"
-              >
-                <span className="relative z-10">{item.label}</span>
+            <Link
+              href="/"
+              className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group"
+            >
+              <span className="relative z-10">Home</span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </Link>
+
+            {/* Tools Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setToolsDropdownOpen(true)}
+              onMouseLeave={() => setToolsDropdownOpen(false)}
+            >
+              <button className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group flex items-center gap-1">
+                <span className="relative z-10">Tools</span>
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${toolsDropdownOpen ? 'rotate-180' : ''}`} />
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </Link>
-            ))}
+              </button>
+              <AnimatePresence>
+                {toolsDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full left-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-xl py-2 z-50"
+                  >
+                    <Link
+                      href="/calculator"
+                      className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
+                    >
+                      grade calculator
+                    </Link>
+                    <Link
+                      href="/predictor"
+                      className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
+                    >
+                      grade predictor
+                    </Link>
+                    <Link
+                      href="/cgpa"
+                      className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
+                    >
+                      cgpa calculator
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <Link
+              href="/notes"
+              className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group"
+            >
+              <span className="relative z-10">Notes</span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </Link>
+
+            {/* PYQs Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setPyqsDropdownOpen(true)}
+              onMouseLeave={() => setPyqsDropdownOpen(false)}
+            >
+              <button className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group flex items-center gap-1">
+                <span className="relative z-10">PYQs</span>
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${pyqsDropdownOpen ? 'rotate-180' : ''}`} />
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </button>
+              <AnimatePresence>
+                {pyqsDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full left-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-xl py-2 z-50"
+                  >
+                    <a
+                      href="https://quizpractice.space"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
+                    >
+                      Quiz Practice
+                    </a>
+                    <a
+                      href="https://docs.google.com/spreadsheets/u/0/d/1x5KAXRlvZLvRjrRfIxFWuNpc8wwboLc21PpYKn8Fv90/htmlview#gid=0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
+                    >
+                      PYQs Sheet
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <Link
+              href="/about"
+              className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group"
+            >
+              <span className="relative z-10">About</span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -120,28 +215,138 @@ export function SiteHeader() {
                 className="md:hidden overflow-hidden"
               >
                 <div className="bg-gray-900/95 backdrop-blur-md rounded-2xl mt-4 p-4 space-y-2 border border-white/10 shadow-xl">
-                  {[
-                    { href: "/", label: "Home" },
-                    { href: "/calculator", label: "Calculator" },
-                    { href: "/predictor", label: "Predictor" },
-                    { href: "/cgpa", label: "CGPA" },
-                    { href: "/about", label: "About" },
-                  ].map((item, index) => (
-                    <motion.div
-                      key={item.href}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Link
+                      href="/"
+                      className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Link
-                        href={item.href}
-                        className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 font-medium"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.label}
-                      </Link>
-                    </motion.div>
-                  ))}
+                      Home
+                    </Link>
+                  </motion.div>
+
+                  {/* Mobile Tools Dropdown */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                  >
+                    <button
+                      className="w-full flex items-center justify-between px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 font-medium"
+                      onClick={() => setMobileToolsOpen(!mobileToolsOpen)}
+                    >
+                      <span>Tools</span>
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${mobileToolsOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {mobileToolsOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden pl-4 mt-2 space-y-2"
+                        >
+                          <Link
+                            href="/calculator"
+                            className="block px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            grade calculator
+                          </Link>
+                          <Link
+                            href="/predictor"
+                            className="block px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            grade predictor
+                          </Link>
+                          <Link
+                            href="/cgpa"
+                            className="block px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            cgpa calculator
+                          </Link>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                  >
+                    <Link
+                      href="/notes"
+                      className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Notes
+                    </Link>
+                  </motion.div>
+
+                  {/* Mobile PYQs Dropdown */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
+                  >
+                    <button
+                      className="w-full flex items-center justify-between px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 font-medium"
+                      onClick={() => setMobilePyqsOpen(!mobilePyqsOpen)}
+                    >
+                      <span>PYQs</span>
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${mobilePyqsOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {mobilePyqsOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden pl-4 mt-2 space-y-2"
+                        >
+                          <a
+                            href="https://quizpractice.space"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                          >
+                            Quiz Practice
+                          </a>
+                          <a
+                            href="https://docs.google.com/spreadsheets/u/0/d/1x5KAXRlvZLvRjrRfIxFWuNpc8wwboLc21PpYKn8Fv90/htmlview#gid=0"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                          >
+                            PYQs Sheet
+                          </a>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.4 }}
+                  >
+                    <Link
+                      href="/about"
+                      className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      About
+                    </Link>
+                  </motion.div>
                 </div>
               </motion.div>
             )}
