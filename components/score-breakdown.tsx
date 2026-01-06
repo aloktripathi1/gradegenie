@@ -117,7 +117,7 @@ export function ScoreBreakdown({ componentScores, totalScore }: ScoreBreakdownPr
                     className="h-full rounded-full"
                     style={{ background: gradientColor }}
                     initial={{ width: 0 }}
-                    animate={{ width: `${(score.contribution / totalScore) * 100}%` }}
+                    animate={{ width: `${Math.min(score.value, 100)}%` }}
                     transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" }}
                   />
                 </motion.div>
