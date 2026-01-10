@@ -126,7 +126,7 @@ export default function CGPACalculator() {
         </AnimatePresence>
 
         {/* Course List */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label className="text-gray-300 text-lg font-semibold">Courses</Label>
             <Button
@@ -139,86 +139,84 @@ export default function CGPACalculator() {
             </Button>
           </div>
 
-          <AnimatePresence>
-            {courses.map((course, index) => (
-              <motion.div
-                key={course.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.3 }}
-                className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-4 p-4 rounded-lg bg-gray-700/50 border border-gray-600"
-              >
-                <div className="space-y-2">
-                  <Label htmlFor={`grade-${course.id}`} className="text-gray-300">
-                    Grade
-                  </Label>
-                  <Select
-                    value={course.grade}
-                    onValueChange={(value) => updateCourse(course.id, "grade", value)}
-                  >
-                    <SelectTrigger
-                      id={`grade-${course.id}`}
-                      className="bg-gray-700 border-gray-600 text-gray-200"
+          {/* Scrollable Course List Container */}
+          <div className="course-list max-h-[60vh] overflow-y-auto pr-2 space-y-2">
+            <AnimatePresence>
+              {courses.map((course, index) => (
+                <motion.div
+                  key={course.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex items-center gap-2 p-2 rounded-lg bg-gray-700/50 border border-gray-600"
+                >
+                  <div className="flex-shrink-0 w-8 text-center text-gray-300 font-medium">
+                    {index + 1}.
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <Select
+                      value={course.grade}
+                      onValueChange={(value) => updateCourse(course.id, "grade", value)}
                     >
-                      <SelectValue placeholder="Select Grade" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 border-gray-600">
-                      {AVAILABLE_GRADES.map((grade) => (
-                        <SelectItem
-                          key={grade}
-                          value={grade}
-                          className="text-gray-200 focus:bg-gray-600 focus:text-white"
-                        >
-                          {grade} ({GRADE_POINTS[grade]} points)
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                      <SelectTrigger
+                        id={`grade-${course.id}`}
+                        className="bg-gray-700 border-gray-600 text-gray-200 h-9"
+                      >
+                        <SelectValue placeholder="Grade" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 border-gray-600">
+                        {AVAILABLE_GRADES.map((grade) => (
+                          <SelectItem
+                            key={grade}
+                            value={grade}
+                            className="text-gray-200 focus:bg-gray-600 focus:text-white"
+                          >
+                            {grade} ({GRADE_POINTS[grade]} points)
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor={`credits-${course.id}`} className="text-gray-300">
-                    Credits
-                  </Label>
-                  <Select
-                    value={course.credits.toString()}
-                    onValueChange={(value) => updateCourse(course.id, "credits", Number(value))}
-                  >
-                    <SelectTrigger
-                      id={`credits-${course.id}`}
-                      className="bg-gray-700 border-gray-600 text-gray-200"
+                  <div className="flex-1 min-w-0">
+                    <Select
+                      value={course.credits.toString()}
+                      onValueChange={(value) => updateCourse(course.id, "credits", Number(value))}
                     >
-                      <SelectValue placeholder="Select Credits" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 border-gray-600">
-                      {AVAILABLE_CREDITS.map((credit) => (
-                        <SelectItem
-                          key={credit}
-                          value={credit.toString()}
-                          className="text-gray-200 focus:bg-gray-600 focus:text-white"
-                        >
-                          {credit}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                      <SelectTrigger
+                        id={`credits-${course.id}`}
+                        className="bg-gray-700 border-gray-600 text-gray-200 h-9"
+                      >
+                        <SelectValue placeholder="Credits" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 border-gray-600">
+                        {AVAILABLE_CREDITS.map((credit) => (
+                          <SelectItem
+                            key={credit}
+                            value={credit.toString()}
+                            className="text-gray-200 focus:bg-gray-600 focus:text-white"
+                          >
+                            {credit}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div className="flex items-end">
                   <Button
                     onClick={() => removeCourse(course.id)}
                     variant="outline"
                     size="icon"
                     disabled={courses.length === 1}
-                    className="bg-gray-700 border-gray-600 text-gray-200 hover:bg-red-900/30 hover:border-red-800 hover:text-red-200 disabled:opacity-50"
+                    className="flex-shrink-0 h-9 w-9 bg-gray-700 border-gray-600 text-gray-200 hover:bg-red-900/30 hover:border-red-800 hover:text-red-200 disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Action Buttons */}
