@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from "framer-motion"
 interface Course {
   id: number
   grade: string
-  credits: number
+  credits: number | null
 }
 
 const GRADE_POINTS: Record<string, number> = {
@@ -29,14 +29,14 @@ const AVAILABLE_CREDITS = [2, 3, 4]
 
 export default function CGPACalculator() {
   const [courses, setCourses] = useState<Course[]>([
-    { id: 1, grade: "", credits: 0 },
+    { id: 1, grade: "", credits: null },
   ])
   const [cgpa, setCgpa] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const addCourse = () => {
     const newId = courses.length > 0 ? Math.max(...courses.map((c) => c.id)) + 1 : 1
-    setCourses([...courses, { id: newId, grade: "", credits: 0 }])
+    setCourses([...courses, { id: newId, grade: "", credits: null }])
     setError(null)
   }
 
@@ -64,7 +64,7 @@ export default function CGPACalculator() {
 
   const calculateCGPA = () => {
     // Validate that all courses have both grade and credits selected
-    const incompleteCourses = courses.filter((course) => !course.grade || course.credits === 0)
+    const incompleteCourses = courses.filter((course) => !course.grade || !course.credits)
     if (incompleteCourses.length > 0) {
       setError("Please select both grade and credits for all courses")
       return
@@ -96,7 +96,7 @@ export default function CGPACalculator() {
   }
 
   const resetCalculator = () => {
-    setCourses([{ id: 1, grade: "", credits: 0 }])
+    setCourses([{ id: 1, grade: "", credits: null }])
     setCgpa(null)
     setError(null)
   }
@@ -181,7 +181,7 @@ export default function CGPACalculator() {
 
                   <div className="flex-1 min-w-0">
                     <Select
-                      value={course.credits.toString()}
+                      value={course.credits?.toString() || ""}
                       onValueChange={(value) => updateCourse(course.id, "credits", Number(value))}
                     >
                       <SelectTrigger
