@@ -48,7 +48,7 @@ export const courseData: Course[] = [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "Bonus", label: "Bonus", description: "Bonus Marks (max 5)", max: 5 },
+      { id: "Bonus", label: "Extra Activity", description: "Bonus Marks (max 5)", max: 5 },
     ],
   },
   {
@@ -61,7 +61,7 @@ export const courseData: Course[] = [
       { id: "Qz1", label: "Quiz 1", description: "First Quiz Score", max: 100 },
       { id: "Qz2", label: "Quiz 2", description: "Second Quiz Score", max: 100 },
       { id: "F", label: "Final Exam", description: "Final Examination Score", max: 100 },
-      { id: "Bonus", label: "Bonus", description: "Bonus Marks (max 5)", max: 5 },
+      { id: "Bonus", label: "Extra Activity", description: "Bonus Marks (max 5)", max: 5 },
     ],
   },
   {
