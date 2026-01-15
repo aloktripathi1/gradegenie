@@ -463,6 +463,7 @@ export default function GradePredictor() {
                 <p className="text-white/70 text-sm leading-relaxed">
                   Enter your current scores for all components except the final exam. We'll calculate the minimum final
                   exam score you need to achieve each grade.
+                  <span className="block mt-1 text-white/50 text-xs">(Grading as per IIT Madras BS Jan 2026)</span>
                 </p>
               </motion.div>
 

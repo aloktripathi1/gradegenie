@@ -486,6 +486,7 @@ export default function GradeCalculator() {
                 </div>
                 <p className="text-white/70 text-sm leading-relaxed">
                   Enter your scores below to calculate your final grade. All fields are optional - leave empty for 0.
+                  <span className="block mt-1 text-white/50 text-xs">(Grading as per IIT Madras BS Jan 2026)</span>
                 </p>
               </motion.div>
 
