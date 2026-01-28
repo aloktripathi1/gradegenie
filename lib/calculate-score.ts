@@ -69,7 +69,7 @@ export function calculateScore(courseId: string, inputValues: Record<string, num
 
     // Added missing Diploma Level courses
     case "bdm":
-      return 0.1 * values.GA + 0.2 * values.Q2 + 0.2 * values.TA + 0.5 * values.F
+      return 0.1 * values.GA + 0.2 * values.Q1 + 0.2 * values.Q2 + 0.5 * values.F
 
     case "ban":
       return 0.7 * Math.max(values.Qz1, values.Qz2) + 0.3 * Math.min(values.Qz1, values.Qz2)
