@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
@@ -107,20 +108,14 @@ export function ScoreBreakdown({ componentScores, totalScore }: ScoreBreakdownPr
                     <span className="text-zinc-300 font-medium">{score.value.toFixed(1)}</span>
                   </div>
                 </div>
-                <motion.div
-                  className="h-2.5 rounded-full bg-zinc-900 overflow-hidden p-0.5"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <motion.div
-                    className="h-full rounded-full"
+                <div className="h-2.5 rounded-full bg-zinc-900 overflow-hidden p-0.5">
+                  <Progress
+                    value={score.value}
+                    maxValue={componentId === "Bonus" ? 5 : 100}
+                    indicatorClassName="h-full rounded-full"
                     style={{ background: gradientColor }}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min(score.value, 100)}%` }}
-                    transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" }}
                   />
-                </motion.div>
+                </div>
               </div>
             )
           })}
