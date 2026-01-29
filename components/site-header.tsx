@@ -44,12 +44,7 @@ export function SiteHeader() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-all duration-300 group">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/30 transition-all duration-300">
-                  <GraduationCap className="h-5 w-5 text-white" />
-                </div>
-              </div>
-              <span className="text-xl font-bold text-white tracking-tight">GradeGenie</span>
+              <span className="text-xl font-bold text-white tracking-tight" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>GradeGenie</span>
             </Link>
           </div>
 
@@ -61,7 +56,7 @@ export function SiteHeader() {
               onMouseEnter={() => setToolsDropdownOpen(true)}
               onMouseLeave={() => setToolsDropdownOpen(false)}
             >
-              <button className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group flex items-center gap-1">
+              <button className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group flex items-center gap-1" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 <span className="relative z-10">Tools</span>
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${toolsDropdownOpen ? 'rotate-180' : ''}`} />
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -101,6 +96,7 @@ export function SiteHeader() {
             <Link
               href="/notes"
               className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group"
+              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
             >
               <span className="relative z-10">Notes</span>
               <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -112,7 +108,7 @@ export function SiteHeader() {
               onMouseEnter={() => setPyqsDropdownOpen(true)}
               onMouseLeave={() => setPyqsDropdownOpen(false)}
             >
-              <button className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group flex items-center gap-1">
+              <button className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group flex items-center gap-1" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 <span className="relative z-10">PYQs</span>
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${pyqsDropdownOpen ? 'rotate-180' : ''}`} />
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -150,6 +146,7 @@ export function SiteHeader() {
             <Link
               href="/about"
               className="px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 relative group"
+              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
             >
               <span className="relative z-10">About</span>
               <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
