@@ -657,12 +657,11 @@ export default function GradePredictor() {
                   </div>
 
                   {/* Table of required scores */}
-                  <div className="overflow-hidden rounded-xl border border-white/[0.12] mb-6 backdrop-blur-sm">
-                    <table className="w-full text-sm">
+                  <div className="overflow-x-auto rounded-xl border border-white/[0.12] mb-6 backdrop-blur-sm">
+                    <table className="min-w-max w-full text-sm">
                       <thead className="bg-white/[0.08]">
                         <tr>
                           <th className="px-5 py-4 text-left text-white/80 font-bold">Grade</th>
-                          <th className="px-5 py-4 text-left text-white/80 font-bold">Min. Score</th>
                           <th className="px-5 py-4 text-left text-white/80 font-bold">Required Final Score</th>
                           <th className="px-5 py-4 text-left text-white/80 font-bold">Achievable</th>
                         </tr>
@@ -675,11 +674,10 @@ export default function GradePredictor() {
                                 <div
                                   className={`text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r ${getGradeColor(score.grade)}`}
                                 >
-                                  {score.grade}
+                                  {score.grade} <span className="text-base font-medium text-white/60 ml-1">(≥ {getMinScoreForGrade(score.grade)})</span>
                                 </div>
                               </div>
                             </td>
-                            <td className="px-5 py-4 text-white/60 font-medium">{getMinScoreForGrade(score.grade)}+</td>
                             <td className="px-5 py-4">
                               <div className="flex items-center gap-3">
                                 <span
