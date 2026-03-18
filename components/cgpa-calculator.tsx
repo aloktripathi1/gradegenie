@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -9,106 +9,181 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Calculator, RefreshCw, AlertTriangle, Plus, Trash2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-interface Course {
-  id: number
-  grade: string
-  credits: number | null
-}
-
-const GRADE_POINTS: Record<string, number> = {
+const GRADE_POINTS = {
   S: 10,
   A: 9,
   B: 8,
   C: 7,
   D: 6,
   E: 4,
+} as const
+
+type Grade = keyof typeof GRADE_POINTS
+
+interface ParsedCourse {
+  id: number
+  code: string
+  name: string
+  credits: number
+  grade: Grade
 }
 
-const AVAILABLE_GRADES = ["S", "A", "B", "C", "D", "E"]
-const AVAILABLE_CREDITS = [2, 3, 4]
+interface ManualCourseDraft {
+  count: "1" | "2" | "3"
+  credits: "" | "2" | "3" | "4"
+  grade: "" | Grade
+}
+
+const COURSE_REGEX = /\b(SEP|JAN|MAY)\s+\d{4}\s+([A-Z]{2}\d{4}P?)\s+(.+?)\s+([234])\s+[A-Z]{2}\s+([SABCDE])\b/g
 
 export default function CGPACalculator() {
-  const [courses, setCourses] = useState<Course[]>([
-    { id: 1, grade: "", credits: null },
-  ])
+  const previewSectionRef = useRef<HTMLDivElement | null>(null)
+  const [step, setStep] = useState<1 | 2 | 3>(1)
+  const [inputText, setInputText] = useState("")
+  const [parsedCourses, setParsedCourses] = useState<ParsedCourse[]>([])
+  const [manualCourses, setManualCourses] = useState<ParsedCourse[]>([])
+  const [manualDraft, setManualDraft] = useState<ManualCourseDraft>({
+    count: "1",
+    credits: "",
+    grade: "",
+  })
   const [cgpa, setCgpa] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const addCourse = () => {
-    const newId = courses.length > 0 ? Math.max(...courses.map((c) => c.id)) + 1 : 1
-    setCourses([...courses, { id: newId, grade: "", credits: null }])
-    setError(null)
-  }
+  const allCourses = useMemo(() => {
+    return [...parsedCourses, ...manualCourses]
+  }, [parsedCourses, manualCourses])
 
-  const removeCourse = (id: number) => {
-    if (courses.length > 1) {
-      setCourses(courses.filter((course) => course.id !== id))
-      setError(null)
-      // Clear result when removing a course
-      setCgpa(null)
-    } else {
-      setError("At least one course is required")
+  const parseCourses = () => {
+    const sourceText = inputText.trim()
+
+    let textCourses: ParsedCourse[] = []
+    if (sourceText) {
+      const matches = [...sourceText.matchAll(COURSE_REGEX)]
+      textCourses = matches.map((match, index) => ({
+        id: index + 1,
+        code: match[2],
+        name: match[3].replace(/\s+/g, " ").trim(),
+        credits: Number(match[4]),
+        grade: match[5] as Grade,
+      }))
     }
-  }
 
-  const updateCourse = (id: number, field: "grade" | "credits", value: string | number) => {
-    setCourses(
-      courses.map((course) =>
-        course.id === id ? { ...course, [field]: value } : course
-      )
-    )
-    setError(null)
-    // Clear result when updating a course
-    setCgpa(null)
-  }
-
-  const calculateCGPA = () => {
-    // Validate that all courses have both grade and credits selected
-    const incompleteCourses = courses.filter((course) => !course.grade || !course.credits)
-    if (incompleteCourses.length > 0) {
-      setError("Please select both grade and credits for all courses")
+    if (textCourses.length === 0 && manualCourses.length === 0) {
+      setError("No valid courses found. Paste grade card text or add manual courses.")
       return
     }
 
-    try {
-      // Calculate total grade points and total credits
-      let totalGradePoints = 0
-      let totalCredits = 0
+    setParsedCourses(textCourses)
+    setStep(2)
+    setCgpa(null)
+    setError(null)
 
-      courses.forEach((course) => {
-        const gradePoint = GRADE_POINTS[course.grade]
-        totalGradePoints += gradePoint * course.credits
-        totalCredits += course.credits
-      })
-
-      // Calculate CGPA
-      if (totalCredits === 0) {
-        setError("No valid courses to calculate CGPA")
-        return
-      }
-
-      const calculatedCGPA = totalGradePoints / totalCredits
-      setCgpa(Number(calculatedCGPA.toFixed(2)))
-      setError(null)
-    } catch (err) {
-      setError("Error calculating CGPA. Please check your inputs.")
-    }
+    // Bring users directly to preview + calculate actions after parsing.
+    setTimeout(() => {
+      previewSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }, 0)
   }
 
-  const resetCalculator = () => {
-    setCourses([{ id: 1, grade: "", credits: null }])
+  const addManualCourse = () => {
+    if (!manualDraft.credits || !manualDraft.grade) {
+      setError("Select credits and grade to add a course.")
+      return
+    }
+
+    const nextId =
+      Math.max(0, ...parsedCourses.map((c) => c.id), ...manualCourses.map((c) => c.id)) + 1
+    const selectedGrade = manualDraft.grade as Grade
+    const selectedCredits = Number(manualDraft.credits)
+
+    const numberToAdd = Number(manualDraft.count)
+    const newManualCourses: ParsedCourse[] = Array.from({ length: numberToAdd }, (_, index) => {
+      const id = nextId + index
+      const manualCourseNumber = manualCourses.length + index + 1
+      return {
+        id,
+        code: `MAN${manualCourseNumber}`,
+        name: `Course ${manualCourseNumber}`,
+        credits: selectedCredits,
+        grade: selectedGrade,
+      }
+    })
+
+    setManualCourses((prev) => [...prev, ...newManualCourses])
+    setManualDraft((prev) => ({ ...prev, credits: "", grade: "" }))
+    setError(null)
+    setCgpa(null)
+  }
+
+  const removeCourse = (id: number) => {
+    setParsedCourses((prev) => prev.filter((course) => course.id !== id))
+    setManualCourses((prev) => prev.filter((course) => course.id !== id))
     setCgpa(null)
     setError(null)
   }
 
+  const calculateCGPA = () => {
+    if (allCourses.length === 0) {
+      setError("No courses available. Parse text or add manual courses first.")
+      return
+    }
+
+    const totalGradePoints = allCourses.reduce(
+      (sum, course) => sum + GRADE_POINTS[course.grade] * course.credits,
+      0
+    )
+    const totalCredits = allCourses.reduce((sum, course) => sum + course.credits, 0)
+
+    if (totalCredits === 0) {
+      setError("No valid courses to calculate CGPA")
+      return
+    }
+
+    const calculatedCGPA = totalGradePoints / totalCredits
+    setCgpa(Number(calculatedCGPA.toFixed(2)))
+    setStep(3)
+    setError(null)
+
+    // Show the full CGPA view (page heading + step strip + result card).
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }, 0)
+  }
+
+  const resetCalculator = () => {
+    setStep(1)
+    setInputText("")
+    setParsedCourses([])
+    setManualCourses([])
+    setManualDraft({ count: "1", credits: "", grade: "" })
+    setCgpa(null)
+    setError(null)
+  }
+
+  const totalCredits = allCourses.reduce((sum, course) => sum + course.credits, 0)
+  const totalGradePoints = allCourses.reduce(
+    (sum, course) => sum + GRADE_POINTS[course.grade] * course.credits,
+    0
+  )
+
   return (
     <Card className="w-full shadow-2xl bg-slate-900/70 border border-white/[0.08] rounded-3xl overflow-hidden backdrop-blur-2xl">
-      {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-slate-500/10 to-cyan-500/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-cyan-500/10 to-teal-500/5 rounded-full blur-3xl -z-10"></div>
 
       <CardContent className="p-8 sm:p-10 space-y-8 relative">
-        {/* Error Alert */}
+        <div className="flex items-center justify-between text-sm">
+          <span className={`font-semibold ${step === 1 ? "text-teal-400" : "text-gray-400"}`}>
+            Step 1: Input
+          </span>
+          <span className={`font-semibold ${step === 2 ? "text-teal-400" : "text-gray-400"}`}>
+            Step 2: Parse & Preview
+          </span>
+          <span className={`font-semibold ${step === 3 ? "text-teal-400" : "text-gray-400"}`}>
+            Step 3: Result
+          </span>
+        </div>
+
         <AnimatePresence>
           {error && (
             <motion.div
@@ -125,189 +200,310 @@ export default function CGPACalculator() {
           )}
         </AnimatePresence>
 
-        {/* Course List */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <Label className="text-gray-300 text-lg font-semibold">Courses</Label>
-            <Button
-              onClick={addCourse}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1 bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
-            >
-              <Plus className="h-4 w-4" /> Add Course
-            </Button>
-          </div>
+        {step === 1 && (
+          <motion.div initial={false} animate={{ opacity: 1 }} className="space-y-6">
+            <div className="rounded-lg border border-gray-600 bg-gray-700/40 p-4">
+              <p className="text-sm text-gray-200 font-semibold">Fastest way: paste your grade card text and continue.</p>
+              <details className="mt-2 text-xs text-gray-400">
+                <summary className="cursor-pointer hover:text-gray-300">How to copy text from portal</summary>
+                <ol className="list-decimal list-inside mt-2 space-y-1">
+                  <li>Go to Documents in your student portal.</li>
+                  <li>Download and open the latest grade card.</li>
+                  <li>Select all text, copy, and paste below.</li>
+                </ol>
+              </details>
+            </div>
 
-          {/* Scrollable Course List Container */}
-          <div className="course-list max-h-[60vh] overflow-y-auto pr-2 space-y-2">
-            <AnimatePresence>
-              {courses.map((course, index) => (
-                <motion.div
-                  key={course.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-gray-700/50 border border-gray-600"
+            <div className="space-y-2">
+              <Label htmlFor="grade-card-text" className="text-gray-300 text-base font-semibold">
+                Paste Grade Card Text
+              </Label>
+              <textarea
+                id="grade-card-text"
+                value={inputText}
+                onChange={(event) => {
+                  setInputText(event.target.value)
+                  setError(null)
+                }}
+                rows={10}
+                placeholder="Paste raw grade card text here..."
+                className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+
+            <div className="space-y-3 rounded-lg border border-gray-600 bg-gray-700/40 p-4">
+              <Label className="text-gray-300 text-base font-semibold">
+                Quick Add Course
+              </Label>
+              <p className="text-xs text-gray-400">
+                Skip typing names. We auto-create <span className="text-gray-200">Course {manualCourses.length + 1}</span>.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <Select
+                  value={manualDraft.count}
+                  onValueChange={(value: "1" | "2" | "3") => {
+                    setManualDraft((prev) => ({ ...prev, count: value }))
+                    setError(null)
+                  }}
                 >
-                  <div className="flex-shrink-0 w-8 text-center text-gray-300 font-medium">
-                    {index + 1}.
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <Select
-                      value={course.grade}
-                      onValueChange={(value) => updateCourse(course.id, "grade", value)}
-                    >
-                      <SelectTrigger
-                        id={`grade-${course.id}`}
-                        className="bg-gray-700 border-gray-600 text-gray-200 h-9"
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-gray-200 h-10">
+                    <SelectValue placeholder="How many courses" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectItem value="1" className="text-gray-200 focus:bg-gray-600 focus:text-white">
+                      1 Course
+                    </SelectItem>
+                    <SelectItem value="2" className="text-gray-200 focus:bg-gray-600 focus:text-white">
+                      2 Courses
+                    </SelectItem>
+                    <SelectItem value="3" className="text-gray-200 focus:bg-gray-600 focus:text-white">
+                      3 Courses
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={manualDraft.credits}
+                  onValueChange={(value: "2" | "3" | "4") => {
+                    setManualDraft((prev) => ({ ...prev, credits: value }))
+                    setError(null)
+                  }}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-gray-200 h-10">
+                    <SelectValue placeholder="Credits" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectItem value="2" className="text-gray-200 focus:bg-gray-600 focus:text-white">
+                      2
+                    </SelectItem>
+                    <SelectItem value="3" className="text-gray-200 focus:bg-gray-600 focus:text-white">
+                      3
+                    </SelectItem>
+                    <SelectItem value="4" className="text-gray-200 focus:bg-gray-600 focus:text-white">
+                      4
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={manualDraft.grade}
+                  onValueChange={(value: Grade) => {
+                    setManualDraft((prev) => ({ ...prev, grade: value }))
+                    setError(null)
+                  }}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-gray-200 h-10">
+                    <SelectValue placeholder="Grade" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    {(Object.keys(GRADE_POINTS) as Grade[]).map((grade) => (
+                      <SelectItem
+                        key={grade}
+                        value={grade}
+                        className="text-gray-200 focus:bg-gray-600 focus:text-white"
                       >
-                        <SelectValue placeholder="Grade" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {AVAILABLE_GRADES.map((grade) => (
-                          <SelectItem
-                            key={grade}
-                            value={grade}
-                            className="text-gray-200 focus:bg-gray-600 focus:text-white"
-                          >
-                            {grade} ({GRADE_POINTS[grade]} points)
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <Select
-                      value={course.credits?.toString() || ""}
-                      onValueChange={(value) => updateCourse(course.id, "credits", Number(value))}
-                    >
-                      <SelectTrigger
-                        id={`credits-${course.id}`}
-                        className="bg-gray-700 border-gray-600 text-gray-200 h-9"
-                      >
-                        <SelectValue placeholder="Credits" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {AVAILABLE_CREDITS.map((credit) => (
-                          <SelectItem
-                            key={credit}
-                            value={credit.toString()}
-                            className="text-gray-200 focus:bg-gray-600 focus:text-white"
-                          >
-                            {credit}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <Button
-                    onClick={() => removeCourse(course.id)}
-                    variant="outline"
-                    size="icon"
-                    disabled={courses.length === 1}
-                    className="flex-shrink-0 h-9 w-9 bg-gray-700 border-gray-600 text-gray-200 hover:bg-red-900/30 hover:border-red-800 hover:text-red-200 disabled:opacity-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex justify-between">
-          <Button
-            variant="outline"
-            onClick={resetCalculator}
-            className="flex items-center gap-1 bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
-          >
-            <RefreshCw className="h-4 w-4" /> Reset
-          </Button>
-          <Button onClick={calculateCGPA} className="bg-teal-600 hover:bg-teal-700 text-white">
-            <Calculator className="mr-2 h-4 w-4" /> Calculate CGPA
-          </Button>
-        </div>
-
-        {/* CGPA Result */}
-        <AnimatePresence>
-          {cgpa !== null && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="mt-6"
-            >
-              <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-gradient-to-br from-gray-700 to-gray-800 border border-gray-600 shadow-lg">
-                <h3 className="text-lg font-medium text-gray-300 mb-2">Your CGPA</h3>
-                <div className="text-6xl font-bold mb-4" style={{ color: getCGPAColor(cgpa) }}>
-                  {cgpa.toFixed(2)}
-                </div>
-                <div className="w-full max-w-xs">
-                  <div className="flex justify-between text-sm text-gray-400 mb-2">
-                    <span>Total Credits</span>
-                    <span className="font-semibold text-gray-200">
-                      {courses.reduce((sum, course) => sum + course.credits, 0)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm text-gray-400">
-                    <span>Total Courses</span>
-                    <span className="font-semibold text-gray-200">{courses.length}</span>
-                  </div>
-                </div>
+                        {grade} ({GRADE_POINTS[grade]} points)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Detailed Breakdown */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-                className="mt-4 p-4 rounded-lg bg-gray-700/50 border border-gray-600"
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-400">
+                  Manually added: <span className="text-gray-200 font-semibold">{manualCourses.length}</span>
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={addManualCourse}
+                  className="flex items-center gap-1 bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
+                >
+                  <Plus className="h-4 w-4" /> Add {manualDraft.count} Course{manualDraft.count === "1" ? "" : "s"}
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <Button
+                variant="outline"
+                onClick={resetCalculator}
+                className="flex items-center gap-1 bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
               >
-                <h4 className="text-sm font-medium text-gray-300 mb-3">Course Breakdown</h4>
-                <div className="space-y-2">
-                  {courses.map((course, index) => (
-                    <div
-                      key={course.id}
-                      className="flex justify-between items-center text-sm text-gray-400 py-2 border-b border-gray-600 last:border-0"
-                    >
-                      <span className="text-gray-300">
-                        Course {index + 1}: Grade {course.grade}
-                      </span>
-                      <span className="text-gray-200">
-                        {GRADE_POINTS[course.grade]} × {course.credits} = {GRADE_POINTS[course.grade] * course.credits}
-                      </span>
-                    </div>
+                <RefreshCw className="h-4 w-4" /> Reset
+              </Button>
+              <Button onClick={parseCourses} className="bg-teal-600 hover:bg-teal-700 text-white">
+                Parse Courses -&gt;
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {step === 2 && (
+          <motion.div ref={previewSectionRef} initial={false} animate={{ opacity: 1 }} className="space-y-4">
+            <div className="flex justify-between rounded-lg border border-gray-600 bg-gray-700/40 p-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setStep(1)
+                  setError(null)
+                }}
+                className="bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
+              >
+                Back to Input
+              </Button>
+              <Button
+                onClick={calculateCGPA}
+                className="bg-teal-600 hover:bg-teal-700 text-white"
+                disabled={allCourses.length === 0}
+              >
+                <Calculator className="mr-2 h-4 w-4" /> Calculate CGPA
+              </Button>
+            </div>
+
+            <div className="overflow-x-auto rounded-lg border border-gray-600 bg-gray-700/40">
+              <table className="w-full text-left text-sm text-gray-200">
+                <thead className="bg-gray-700/70 text-gray-300">
+                  <tr>
+                    <th className="px-3 py-2">Code</th>
+                    <th className="px-3 py-2">Course Name</th>
+                    <th className="px-3 py-2">Credits</th>
+                    <th className="px-3 py-2">Grade</th>
+                    <th className="px-3 py-2">Grade Point</th>
+                    <th className="px-3 py-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allCourses.map((course) => (
+                    <tr key={course.id} className="border-t border-gray-600">
+                      <td className="px-3 py-2 font-medium text-gray-100">{course.code}</td>
+                      <td className="px-3 py-2">{course.name}</td>
+                      <td className="px-3 py-2">{course.credits}</td>
+                      <td className="px-3 py-2">{course.grade}</td>
+                      <td className="px-3 py-2">{GRADE_POINTS[course.grade]}</td>
+                      <td className="px-3 py-2 text-right">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeCourse(course.id)}
+                          className="h-8 bg-gray-700 border-gray-600 text-gray-200 hover:bg-red-900/30 hover:border-red-800 hover:text-red-200"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
                   ))}
-                  <div className="flex justify-between items-center text-sm font-semibold text-gray-200 pt-2">
-                    <span>Total Grade Points</span>
-                    <span>
-                      {courses.reduce(
-                        (sum, course) => sum + GRADE_POINTS[course.grade] * course.credits,
-                        0
-                      )}
-                    </span>
-                  </div>
+                </tbody>
+              </table>
+            </div>
+
+            {allCourses.length === 0 && (
+              <p className="text-sm text-amber-300">No courses left in preview. Go back and add/parse again.</p>
+            )}
+
+            <div className="flex justify-between">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setStep(1)
+                  setError(null)
+                }}
+                className="bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
+              >
+                Back to Input
+              </Button>
+              <Button
+                onClick={calculateCGPA}
+                className="bg-teal-600 hover:bg-teal-700 text-white"
+                disabled={allCourses.length === 0}
+              >
+                <Calculator className="mr-2 h-4 w-4" /> Calculate CGPA
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {step === 3 && cgpa !== null && (
+          <motion.div initial={false} animate={{ opacity: 1 }} className="space-y-6">
+            <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-gradient-to-br from-gray-700 to-gray-800 border border-gray-600 shadow-lg">
+              <h3 className="text-lg font-medium text-gray-300 mb-2">Your CGPA</h3>
+              <div className="text-6xl font-bold mb-4" style={{ color: getCGPAColor(cgpa) }}>
+                {cgpa.toFixed(2)}
+              </div>
+              <div className="w-full max-w-sm space-y-2">
+                <div className="flex justify-between text-sm text-gray-400">
+                  <span>Total Credits</span>
+                  <span className="font-semibold text-gray-200">{totalCredits}</span>
                 </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <div className="flex justify-between text-sm text-gray-400">
+                  <span>Total Courses</span>
+                  <span className="font-semibold text-gray-200">{allCourses.length}</span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-400">
+                  <span>Total Grade Points</span>
+                  <span className="font-semibold text-gray-200">{totalGradePoints}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto rounded-lg border border-gray-600 bg-gray-700/40">
+              <table className="w-full text-left text-sm text-gray-200">
+                <thead className="bg-gray-700/70 text-gray-300">
+                  <tr>
+                    <th className="px-3 py-2">Code</th>
+                    <th className="px-3 py-2">Course Name</th>
+                    <th className="px-3 py-2">Credits</th>
+                    <th className="px-3 py-2">Grade</th>
+                    <th className="px-3 py-2">Grade Point</th>
+                    <th className="px-3 py-2">Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allCourses.map((course) => {
+                    const gradePoint = GRADE_POINTS[course.grade]
+                    return (
+                      <tr key={course.id} className="border-t border-gray-600">
+                        <td className="px-3 py-2 font-medium text-gray-100">{course.code}</td>
+                        <td className="px-3 py-2">{course.name}</td>
+                        <td className="px-3 py-2">{course.credits}</td>
+                        <td className="px-3 py-2">{course.grade}</td>
+                        <td className="px-3 py-2">{gradePoint}</td>
+                        <td className="px-3 py-2">{gradePoint * course.credits}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex justify-between">
+              <Button
+                variant="outline"
+                onClick={() => setStep(2)}
+                className="bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
+              >
+                Edit Courses
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setStep(1)}
+                className="bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
+              >
+                Re-parse / Add More
+              </Button>
+            </div>
+          </motion.div>
+        )}
       </CardContent>
     </Card>
   )
 }
 
 function getCGPAColor(cgpa: number): string {
-  if (cgpa >= 9.0) return "#10B981" // emerald-500 (S)
-  if (cgpa >= 8.0) return "#34D399" // emerald-400 (A)
-  if (cgpa >= 7.0) return "#06B6D4" // cyan-500 (B)
-  if (cgpa >= 6.0) return "#22D3EE" // cyan-400 (C)
-  if (cgpa >= 5.0) return "#F59E0B" // amber-500 (D)
-  return "#FBBF24" // amber-400 (E)
+  if (cgpa >= 9.0) return "#10B981"
+  if (cgpa >= 8.0) return "#34D399"
+  if (cgpa >= 7.0) return "#06B6D4"
+  if (cgpa >= 6.0) return "#22D3EE"
+  if (cgpa >= 5.0) return "#F59E0B"
+  return "#FBBF24"
 }
