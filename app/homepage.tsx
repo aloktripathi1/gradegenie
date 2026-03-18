@@ -79,16 +79,16 @@ export default function ClientHomePage() {
       <SiteHeader />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative pt-28 pb-18 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 xl:gap-14 items-center relative z-10">
             <div className="text-center lg:text-left">
               {/* Floating Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full mb-8 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 backdrop-blur-xl"
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full mb-7 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 backdrop-blur-xl"
               >
                 <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
                 <span className="text-emerald-100 text-sm font-medium tracking-wide">Built for IITM BS Students</span>
@@ -99,7 +99,7 @@ export default function ClientHomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="mb-6"
+                className="mb-5"
               >
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] tracking-tight">
                   <span className="block text-white">Your Academic</span>
@@ -114,7 +114,7 @@ export default function ClientHomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-xl text-slate-400 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                className="text-lg sm:text-xl text-slate-400 mb-9 max-w-xl mx-auto lg:mx-0 leading-relaxed"
               >
                 Precision-engineered grade calculations with course-specific formulas. Get instant predictions and comprehensive breakdowns.
               </motion.p>
@@ -124,13 +124,13 @@ export default function ClientHomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-12 lg:mb-0"
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-10 lg:mb-0"
               >
                 <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link href="/calculator">
                     <Button
                       size="lg"
-                      className="group relative px-8 py-6 rounded-2xl font-medium text-base border-0 h-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300"
+                      className="group relative px-7 py-5 rounded-2xl font-medium text-base border-0 h-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300"
                     >
                       <div className="flex items-center gap-2.5">
                         <Calculator className="h-4.5 w-4.5" />
@@ -146,7 +146,7 @@ export default function ClientHomePage() {
                     <Button
                       variant="outline"
                       size="lg"
-                      className="group relative px-8 py-6 rounded-2xl font-medium text-base h-auto border-2 border-white/15 text-white hover:border-white/30 hover:bg-white/5 backdrop-blur-sm transition-all duration-300"
+                      className="group relative px-7 py-5 rounded-2xl font-medium text-base h-auto border-2 border-white/15 text-white hover:border-white/30 hover:bg-white/5 backdrop-blur-sm transition-all duration-300"
                     >
                       <div className="flex items-center gap-2.5">
                         <Target className="h-4.5 w-4.5" />
@@ -166,7 +166,7 @@ export default function ClientHomePage() {
               transition={{ duration: 1, delay: 0.5 }}
               className="relative hidden lg:block"
             >
-              <div className="relative z-10 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500">
+              <div className="relative z-10 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-7 shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 max-w-[500px] ml-auto">
                 {/* Mock Header */}
                 <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
                   <div className="flex items-center gap-3">
