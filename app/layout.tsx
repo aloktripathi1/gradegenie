@@ -2,6 +2,7 @@ import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: "GradeGenie - IITM BS",
@@ -41,6 +42,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

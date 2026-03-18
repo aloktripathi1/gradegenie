@@ -19,6 +19,36 @@ A specialized grade calculator built by an IITM BS student, for IITM BS students
 - **Animations**: Framer Motion
 - **Icons**: Lucide Icons
 
+## Get Started
+
+To start counting visitors and page views, follow these steps.
+
+### Next.js
+
+1. Install our package
+
+Start by installing `@vercel/analytics` in your existing project.
+
+```bash
+npm i @vercel/analytics
+```
+
+2. Add the React component
+
+Import and use the `<Analytics />` React component into your app's layout.
+
+```tsx
+import { Analytics } from "@vercel/analytics/next"
+```
+
+For full examples and further reference, please refer to the Vercel documentation.
+
+3. Deploy & visit your site
+
+Deploy your changes and visit the deployment to collect your page views.
+
+If you do not see data after 30 seconds, check for content blockers and try to navigate between pages on your site.
+
 
 
 ## Project Structure
